@@ -1,0 +1,29 @@
+{% extends 'admin/painel_fisio.html' %}
+
+{% block title %}Meus Agendamentos{% endblock %}
+
+{% block content %}
+  <h1>Meus Agendamentos</h1>
+  {% if agendamentos %}
+    <table>
+      <thead>
+        <tr>
+          <th>Paciente</th>
+          <th>Data</th>
+          <th>Horário</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for ag in agendamentos %}
+          <tr>
+            <td>{{ ag.paciente_nome }}</td>
+            <td>{{ ag.data }}</td>
+            <td>{{ ag.horario }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>Você não tem agendamentos ainda.</p>
+  {% endif %}
+{% endblock %}

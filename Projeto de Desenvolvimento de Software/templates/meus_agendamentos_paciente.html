@@ -1,0 +1,120 @@
+{% extends 'painel_paciente.html' %}
+
+{% block title %}Página Inicial{% endblock %}
+
+{% block content %}
+
+<style>
+  form {
+    max-width: 600px;
+    margin: 30px auto;
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+
+  label {
+    display: block;
+    margin-top: 20px;
+    font-weight: bold;
+    color: #34495e;
+  }
+
+  select, input[type="date"] {
+    width: 100%;
+    padding: 12px;
+    margin-top: 8px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    background-color: #f9f9f9;
+  }
+
+  button {
+    margin-top: 30px;
+    width: 100%;
+    padding: 12px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
+  h2 {
+    text-align: center;
+    margin-top: 40px;
+    color: #2c3e50;
+  }
+
+  table {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto 40px;
+    border-collapse: collapse;
+  }
+
+  th, td {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    text-align: center;
+  }
+
+  th {
+    background-color: #f2f2f2;
+    color: #333;
+  }
+
+  .btn {
+    text-decoration: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    color: white;
+    font-size: 14px;
+    margin: 0 4px;
+  }
+
+  .btn-editar {
+    background-color: #3498db;
+  }
+
+  .btn-excluir {
+    background-color: #e74c3c;
+  }
+
+  .btn-editar:hover {
+    background-color: #2980b9;
+  }
+
+  .btn-excluir:hover {
+    background-color: #c0392b;
+  }
+</style>
+
+
+
+
+<form method="POST" action="{{ url_for('agendar') }}">
+  <h1>Meus Agendamentos</h1>
+  {% if agendamentos %}
+  <ul>
+  {% for ag in agendamentos %}
+    <li>
+      {{ ag.data }} - {{ ag.horario }} - {{ ag.fisioterapeuta_nome }}
+      <a href="{{ url_for('editar_agendamento', id=ag.id) }}">Editar</a> |
+      <a href="{{ url_for('excluir_agendamento', id=ag.id) }}">Excluir</a>
+    </li>
+  {% endfor %}
+  </ul>
+{% else %}
+  <p>Nenhum agendamento encontrado.</p>
+{% endif %}
+</form>
+
+{% endblock %}
+
+
+
+

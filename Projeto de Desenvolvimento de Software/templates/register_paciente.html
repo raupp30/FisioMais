@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <title>Register Paciente</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* Seu CSS permanece igual */
+        *,:before,:after{padding:0;margin:0;box-sizing:border-box;}
+        body{background-image:url('https://isac.org.br/wp-content/uploads/2024/04/experiencia-do-paciente-cuidados.jpg');}
+        .background{width:430px;height:520px;position:absolute;transform:translate(-50%,-50%);left:50%;top:50%;}
+        form{height:950px;width:400px;background-color:rgba(255,255,255,0.13);position:absolute;transform:translate(-50%,-50%);top:50%;left:50%;border-radius:10px;backdrop-filter:blur(10px);border:2px solid rgba(255,255,255,0.1);box-shadow:0 0 40px rgba(8,7,16,0.6);padding:50px 35px;overflow-y:auto;}
+        form *{font-family:'Poppins',sans-serif;color:#ffffff;letter-spacing:0.5px;outline:none;border:none;}
+        form h2{font-size:20px;font-weight:500;line-height:42px;text-align:center;}
+        label{display:block;margin-top:10px;font-size:16px;font-weight:500;}
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="date"],
+        input[type="tel"]{
+            display:block;height:50px;width:100%;background-color:rgba(255,255,255,0.07);
+            border-radius:3px;padding:0 10px;margin-top:7px;font-size:14px;font-weight:300;
+        }
+        ::placeholder{color:#e5e5e5;}
+        button{margin-top:10px;margin-bottom:10px;width:100%;background-color:#ffffff;color:#080710;
+            padding:15px 0;font-size:18px;font-weight:600;border-radius:5px;cursor:pointer;}
+        .social{margin-top:20px;display:flex;}
+        .social div{width:150px;border-radius:3px;padding:5px 10px 10px 5px;background-color:rgba(255,255,255,0.27);
+            color:#eaf0fb;text-align:center;}
+        .social div:hover{background-color:rgba(255,255,255,0.47);}
+        .social .fb{margin-left:25px;}
+        .social i{margin-right:4px;}
+        .register{text-align:center;font-size:15px;margin-top:5px;}
+        .terms{text-align:center;font-size:11px;}
+        .do-login{text-align:center;font-size:17px;}
+        .radio-group label {
+            display: inline-block;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <form method="POST">
+        <h2>Registrar Paciente</h2>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <p style="color: {% if category == 'success' %}green{% else %}red{% endif %};">{{ message }}</p>
+        {% endfor %}
+        {% endwith %}
+
+        <label>Email:</label>
+        <input type="email" name="email" maxlength="50" required>
+
+        <label>Nome completo:</label>
+        <input type="text" name="nome" maxlength="40" required>
+
+        <label>CPF:</label>
+        <input type="text" maxlength="11" name="cpf" required>
+
+        <label>Data de nascimento:</label>
+        <input type="date" name="data_nasc" required>
+
+        <label>Telefone celular:</label>
+        <input type="tel" maxlength="11" name="telefone" required>
+
+        <label>Gênero:</label>
+        <div class="radio-group">
+            <label><input type="radio" name="genero" value="Masculino" required> Masculino</label>
+            <label><input type="radio" name="genero" value="Feminino"> Feminino</label>
+            <label><input type="radio" name="genero" value="Outro"> Outro</label>
+        </div>
+
+        <label>Senha:</label>
+        <input type="password" name="senha" required>
+
+        <label>Confirmar senha:</label>
+        <input type="password" name="confirmar_senha" required>
+
+        <button type="submit">Registrar</button>
+
+        <p class="terms">Ao se registrar você estará concordando com nossos <a href="/terms">termos de serviço</a> e nossa <a href="/privacity">política de privacidade</a></p>
+        <p class="do-login">Já tem conta? <a href="/login_paciente">Faça login</a></p>
+    </form>  
+</body>
+</html>

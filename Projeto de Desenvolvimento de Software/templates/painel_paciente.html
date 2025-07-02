@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      display: flex;
+    }
+
+    .sidebar {
+      width: 220px;
+      height: 100vh;
+      background-color: #b6ccd8;
+      padding-top: 20px;
+      position: fixed;
+    }
+
+    .sidebar a {
+      display: block;
+      color: white;
+      padding: 16px;
+      text-decoration: none;
+      transition: background 0.3s;
+    }
+
+    .sidebar a:hover {
+      background-color: #6eb680;
+    }
+
+    .content {
+      margin-left: 220px;
+      padding: 20px;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <div class="logo-container" style="text-align: center; padding: 10px;">
+      <img src="{{ url_for('static', filename='img/fisiomais.png') }}" alt="FisioMais+ Logo" style="max-width: 200px;">
+    </div>
+    <a href="{{ url_for('painel_paciente') }}">🏠 Menu Paciente</a>
+    <a href="{{ url_for('agendar') }}">📅 Agendamentos</a>
+    <a href="{{ url_for('evolucao_paciente') }}">📈 Evolução </a>
+    <a href="{{ url_for('exercicios_paciente') }}">🏋🏽 Exercicios</a>
+    <a href="{{ url_for('config_paciente') }}">⚙️ Meus Dados</a>
+    <a href="{{ url_for('home') }}">🚪 Sair</a>
+  </div>
+
+  <div class="content">
+    {% block content %}
+    <!-- Aqui vai o conteúdo das páginas -->
+    {% endblock %}
+  </div>
+</body>
+</html>

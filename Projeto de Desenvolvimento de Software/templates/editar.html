@@ -1,0 +1,28 @@
+{% extends 'painel_paciente.html' %}
+
+{% block title %}
+Página Inicial
+{% endblock %}
+
+{% block content %}
+
+<form method="POST">
+  <label for="fisioterapeuta">Fisioterapeuta:</label>
+  <select name="fisioterapeuta" required>
+    {% for id, fisio in fisioterapeutas.items() %}
+      <option value="{{ id }}" {% if agendamento.fisioterapeuta == id %}selected{% endif %}>
+        {{ fisio.nome }}
+      </option>
+    {% endfor %}
+  </select>
+
+  <label for="data-agendamento">Data:</label>
+  <input type="date" name="data-agendamento" value="{{ agendamento.data }}" required>
+
+  <label for="horario">Horário:</label>
+  <input type="time" name="horario" value="{{ agendamento.horario }}" required>
+
+  <button type="submit">Salvar alterações</button>
+</form>
+
+{% endblock %}
