@@ -13,14 +13,17 @@ import requests
 from utils.email_service import enviar_email_redefinicao
 from dotenv import load_dotenv
 load_dotenv()
+import json
 
 
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY")
 
 
-cred_path = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
-cred = credentials.Certificate(cred_path)
+cred_json = os.getenv("FIREBASE_ADMIN_SDK_JSON")
+cred_dict = json.loads(cred_json)  # converte string para dict
+
+cred = credentials.Certificate(cred_dict)
 firebase_admin.initialize_app(cred, {
     'databaseURL': os.getenv("FIREBASE_DATABASE_URL")
 })
