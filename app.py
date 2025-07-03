@@ -407,6 +407,8 @@ def logout():
     return redirect('/')
 
 @app.route('/agendar', methods=['GET', 'POST'])
+@login_required
+@tipo_usuario_required('paciente')
 def agendar():
     if request.method == 'POST':
         fisioterapeuta = request.form['fisioterapeuta']
