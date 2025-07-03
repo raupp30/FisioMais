@@ -1,134 +1,61 @@
 {% extends 'painel_paciente.html' %}
 
-{% block title %}Página Inicial{% endblock %}
+{% block title %}Agendamentos{% endblock %}
 
 {% block content %}
+<div class="max-w-xl mx-auto mt-10 bg-white shadow-lg rounded-2xl p-8">
+  <h1 class="text-3xl font-bold text-center text-gray-800 mb-8">📅 Agendar Consulta</h1>
 
-<style>
-  form {
-    max-width: 600px;
-    margin: 30px auto;
-    background: #fff;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  }
+  <form method="POST" action="{{ url_for('agendar') }}" class="space-y-6">
 
-  label {
-    display: block;
-    margin-top: 20px;
-    font-weight: bold;
-    color: #34495e;
-  }
+    <div>
+      <label for="fisioterapeuta" class="block text-gray-700 font-semibold mb-1">Selecione um fisioterapeuta:</label>
+      <select id="fisioterapeuta" name="fisioterapeuta" required
+              class="w-full rounded-lg border border-gray-300 p-3 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-400">
+        <option value="" disabled selected>-- Escolha um profissional --</option>
+        {% for fisioterapeuta in fisioterapeutas %}
+          <option value="{{ fisioterapeuta.id }}">{{ fisioterapeuta.nome }}</option>
+        {% endfor %}
+      </select>
+    </div>
 
-  select, input[type="date"] {
-    width: 100%;
-    padding: 12px;
-    margin-top: 8px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 16px;
-    background-color: #f9f9f9;
-  }
+    <div>
+      <label for="data-agendamento" class="block text-gray-700 font-semibold mb-1">Selecione a data:</label>
+      <input type="date" id="data-agendamento" name="data-agendamento" min="2025-06-10" max="2025-12-31" required
+             class="w-full rounded-lg border border-gray-300 p-3 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-400">
+    </div>
 
-  button {
-    margin-top: 30px;
-    width: 100%;
-    padding: 12px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    font-size: 16px;
-    border-radius: 8px;
-    cursor: pointer;
-  }
+    <div>
+      <label for="horario" class="block text-gray-700 font-semibold mb-1">Selecione o horário:</label>
+      <select id="horario" name="horario" required
+              class="w-full rounded-lg border border-gray-300 p-3 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-400">
+        <option value="" disabled selected>-- Escolha um horário --</option>
+        <option value="08">08:00</option>
+        <option value="09">09:00</option>
+        <option value="10">10:00</option>
+        <option value="11">11:00</option>
+        <option value="14">14:00</option>
+        <option value="15">15:00</option>
+        <option value="16">16:00</option>
+        <option value="17">17:00</option>
+        <option value="18">18:00</option>
+        <option value="19">19:00</option>
+        <option value="20">20:00</option>
+      </select>
+    </div>
 
-  h2 {
-    text-align: center;
-    margin-top: 40px;
-    color: #2c3e50;
-  }
+    <button type="submit"
+            class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 rounded-lg transition-all duration-300">
+      Agendar
+    </button>
 
-  table {
-    width: 100%;
-    max-width: 900px;
-    margin: 0 auto 40px;
-    border-collapse: collapse;
-  }
+    <p class="text-center text-sm text-gray-600">
+      Já tem um agendamento?
+      <a href="{{ url_for('meus_agendamentos_paciente') }}" class="text-blue-500 hover:underline font-medium">
+        Ver meus agendamentos
+      </a>
+    </p>
 
-  th, td {
-    padding: 12px 15px;
-    border: 1px solid #ddd;
-    text-align: center;
-  }
-
-  th {
-    background-color: #f2f2f2;
-    color: #333;
-  }
-
-  .btn {
-    text-decoration: none;
-    padding: 8px 14px;
-    border-radius: 6px;
-    color: white;
-    font-size: 14px;
-    margin: 0 4px;
-  }
-
-  .btn-editar {
-    background-color: #3498db;
-  }
-
-  .btn-excluir {
-    background-color: #e74c3c;
-  }
-
-  .btn-editar:hover {
-    background-color: #2980b9;
-  }
-
-  .btn-excluir:hover {
-    background-color: #c0392b;
-  }
-</style>
-
-
-
-
-<form method="POST" action="{{ url_for('agendar') }}">
-    <h1>Agendamentos</h1>
-  <label for="fisioterapeuta">Selecione um fisioterapeuta:</label><br>
-
-  <select id="fisioterapeuta" name="fisioterapeuta" required>
-  <option value="" disabled selected>-- Escolha um profissional --</option>
-  {% for fisioterapeuta in fisioterapeutas %}
-    <option value="{{ fisioterapeuta.id }}">{{ fisioterapeuta.nome }}</option>
-  {% endfor %}
-</select>
-
-  <label for="data-agendamento">Selecione a data:</label>
-  <input type="date" id="data-agendamento" name="data-agendamento" min="2025-06-10" max="2025-12-31" required>
-
-  <label for="horario">Selecione o horário:</label>
-  <select id="horario" name="horario" required>
-    <option value="" disabled selected>-- Escolha um horário --</option>
-    <option value="08:00">08:00</option>
-    <option value="09:00">09:00</option>
-    <option value="10:00">10:00</option>
-    <option value="11:00">11:00</option>
-    <!-- Pausa das 12 às 14 -->
-    <option value="14:00">14:00</option>
-    <option value="15:00">15:00</option>
-    <option value="16:00">16:00</option>
-    <option value="17:00">17:00</option>
-    <option value="18:00">18:00</option>
-    <option value="19:00">19:00</option>
-    <option value="20:00">20:00</option>
-  </select>
-
-  <h5>Já tem um agendamento? <a href="/meus_agendamentos_paciente">Meus agendamentos.</a> </h5>
-  <button type="submit">Agendar</button>
-</form>
-
+  </form>
+</div>
 {% endblock %}

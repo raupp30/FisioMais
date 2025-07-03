@@ -3,57 +3,38 @@
 <head>
   <meta charset="UTF-8">
   <title>Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
   <style>
     body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      display: flex;
-    }
-
-    .sidebar {
-      width: 220px;
-      height: 100vh;
-      background-color: #b6ccd8;
-      padding-top: 20px;
-      position: fixed;
-    }
-
-    .sidebar a {
-      display: block;
-      color: white;
-      padding: 16px;
-      text-decoration: none;
-      transition: background 0.3s;
-    }
-
-    .sidebar a:hover {
-      background-color: #6eb680;
-    }
-
-    .content {
-      margin-left: 220px;
-      padding: 20px;
-      width: 100%;
+      font-family: 'Poppins', sans-serif;
     }
   </style>
 </head>
-<body>
-  <div class="sidebar">
-    <div class="logo-container" style="text-align: center; padding: 10px;">
-      <img src="{{ url_for('static', filename='img/fisiomais.png') }}" alt="FisioMais+ Logo" style="max-width: 200px;">
-    </div>
-    <a href="{{ url_for('painel_paciente') }}">🏠 Menu Paciente</a>
-    <a href="{{ url_for('agendar') }}">📅 Agendamentos</a>
-    <a href="{{ url_for('evolucao_paciente') }}">📈 Evolução </a>
-    <a href="{{ url_for('exercicios_paciente') }}">🏋🏽 Exercicios</a>
-    <a href="{{ url_for('config_paciente') }}">⚙️ Meus Dados</a>
-    <a href="{{ url_for('home') }}">🚪 Sair</a>
-  </div>
+<body class="flex min-h-screen bg-gray-100">
 
-  <div class="content">
+  <!-- Sidebar -->
+  <aside class="w-56 bg-blue-200 min-h-screen fixed flex flex-col shadow-md">
+    <div class="p-4 text-center">
+      <img src="{{ url_for('static', filename='img/fisiomais.png') }}" alt="FisioMais+ Logo" class="mx-auto max-w-[180px]">
+    </div>
+    <nav class="flex flex-col mt-4 text-white font-medium">
+      <a href="{{ url_for('menu_paciente') }}" class="px-4 py-3 hover:bg-green-400 transition-colors">🏠 Menu Paciente</a>
+      <a href="{{ url_for('agendar') }}" class="px-4 py-3 hover:bg-green-400 transition-colors">📅 Agendamentos</a>
+      <a href="{{ url_for('evolucao_paciente') }}" class="px-4 py-3 hover:bg-green-400 transition-colors">📈 Evolução</a>
+      <a href="{{ url_for('exercicios_paciente') }}" class="px-4 py-3 hover:bg-green-400 transition-colors">🏋🏽 Exercícios</a>
+      <a href="{{ url_for('config_paciente') }}" class="px-4 py-3 hover:bg-green-400 transition-colors">⚙️ Meus Dados</a>
+      <a href="{{ url_for('home') }}" class="px-4 py-3 hover:bg-red-400 transition-colors">🚪 Sair</a>
+    </nav>
+  </aside>
+
+  <!-- Conteúdo -->
+  <main class="ml-56 w-full p-6">
     {% block content %}
     <!-- Aqui vai o conteúdo das páginas -->
     {% endblock %}
-  </div>
+  </main>
+
 </body>
 </html>

@@ -6,3 +6,5 @@ __pycache__/
 *.json
 node_modules/
 venv/
+pds2025-fc352-firebase-adminsdk-fbsvc-051ee70801.json
+FIREBASE_DATABASE_URL=https://pds2025-fc352-default-rtdb.firebaseio.com/

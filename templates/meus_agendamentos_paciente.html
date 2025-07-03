@@ -1,120 +1,64 @@
 {% extends 'painel_paciente.html' %}
 
-{% block title %}Página Inicial{% endblock %}
+{% block title %}Meus Agendamentos{% endblock %}
 
 {% block content %}
 
-<style>
-  form {
-    max-width: 600px;
-    margin: 30px auto;
-    background: #fff;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  }
+<div class="max-w-5xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
+  <h1 class="text-2xl font-bold text-center text-gray-800 mb-6">Meus Agendamentos</h1>
 
-  label {
-    display: block;
-    margin-top: 20px;
-    font-weight: bold;
-    color: #34495e;
-  }
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="mb-6 space-y-3">
+        {% for category, message in messages %}
+          <div class="px-4 py-3 rounded text-white shadow 
+                      {% if category == 'success' %} bg-green-500 
+                      {% elif category == 'error' %} bg-red-500 
+                      {% else %} bg-blue-500 
+                      {% endif %}">
+            {{ message }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
 
-  select, input[type="date"] {
-    width: 100%;
-    padding: 12px;
-    margin-top: 8px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 16px;
-    background-color: #f9f9f9;
-  }
-
-  button {
-    margin-top: 30px;
-    width: 100%;
-    padding: 12px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    font-size: 16px;
-    border-radius: 8px;
-    cursor: pointer;
-  }
-
-  h2 {
-    text-align: center;
-    margin-top: 40px;
-    color: #2c3e50;
-  }
-
-  table {
-    width: 100%;
-    max-width: 900px;
-    margin: 0 auto 40px;
-    border-collapse: collapse;
-  }
-
-  th, td {
-    padding: 12px 15px;
-    border: 1px solid #ddd;
-    text-align: center;
-  }
-
-  th {
-    background-color: #f2f2f2;
-    color: #333;
-  }
-
-  .btn {
-    text-decoration: none;
-    padding: 8px 14px;
-    border-radius: 6px;
-    color: white;
-    font-size: 14px;
-    margin: 0 4px;
-  }
-
-  .btn-editar {
-    background-color: #3498db;
-  }
-
-  .btn-excluir {
-    background-color: #e74c3c;
-  }
-
-  .btn-editar:hover {
-    background-color: #2980b9;
-  }
-
-  .btn-excluir:hover {
-    background-color: #c0392b;
-  }
-</style>
-
-
-
-
-<form method="POST" action="{{ url_for('agendar') }}">
-  <h1>Meus Agendamentos</h1>
   {% if agendamentos %}
-  <ul>
-  {% for ag in agendamentos %}
-    <li>
-      {{ ag.data }} - {{ ag.horario }} - {{ ag.fisioterapeuta_nome }}
-      <a href="{{ url_for('editar_agendamento', id=ag.id) }}">Editar</a> |
-      <a href="{{ url_for('excluir_agendamento', id=ag.id) }}">Excluir</a>
-    </li>
-  {% endfor %}
-  </ul>
-{% else %}
-  <p>Nenhum agendamento encontrado.</p>
-{% endif %}
-</form>
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-100">
+          <tr>
+            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase">Data</th>
+            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase">Horário</th>
+            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase">Fisioterapeuta</th>
+            <th class="px-6 py-3 text-center text-sm font-semibold text-gray-600 uppercase">Ações</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          {% for ag in agendamentos %}
+            <tr>
+              <td class="px-6 py-4 text-gray-700">{{ ag.data | datetimeformat }}</td>
+              <td class="px-6 py-4 text-gray-700">{{ ag.horario }}</td>
+              <td class="px-6 py-4 text-gray-700">{{ ag.fisioterapeuta_nome }}</td>
+              <td class="px-6 py-4 text-center space-x-2">
+                <a href="{{ url_for('editar_agendamento', id=ag.id) }}"
+                   class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-semibold py-1 px-3 rounded">
+                  Editar
+                </a>
+                <a href="{{ url_for('excluir_agendamento', id=ag.id) }}"
+                   class="inline-block bg-red-500 hover:bg-red-600 text-white font-semibold py-1 px-3 rounded"
+                   onclick="return confirm('Tem certeza que deseja excluir este agendamento?')">
+                  Excluir
+                </a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <p class="text-center text-gray-500 mt-6">Nenhum agendamento encontrado.</p>
+  {% endif %}
+</div>
 
 {% endblock %}
-
-
-
-

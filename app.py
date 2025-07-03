@@ -14,16 +14,14 @@ from utils.email_service import enviar_email_redefinicao
 from dotenv import load_dotenv
 load_dotenv()
 import json
+from firebase_admin import credentials
 
 
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY")
 
-
-cred_json = os.getenv("FIREBASE_ADMIN_SDK_JSON")
-cred_dict = json.loads(cred_json)  # converte string para dict
-
-cred = credentials.Certificate(cred_dict)
+cred_path = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
+cred = credentials.Certificate(cred_path)
 firebase_admin.initialize_app(cred, {
     'databaseURL': os.getenv("FIREBASE_DATABASE_URL")
 })
@@ -137,13 +135,15 @@ def meus_agendamentos_fisio():
 def evolucao():
     return render_template('admin/evolucao.html')
 
+from datetime import datetime, date
+
 @app.route('/register_fisio', methods=['GET', 'POST'])
 def register_fisio():
     if request.method == 'POST':
         email = request.form['email']
         nome = request.form['nome']
         cpf = request.form['cpf']
-        data_nasc = request.form['data_nasc']
+        data_nasc_str = request.form['data_nasc']
         telefone = request.form['telefone']
         genero = request.form['genero']
         senha = request.form['senha']
@@ -151,6 +151,19 @@ def register_fisio():
 
         if senha != confirmar_senha:
             flash("Senhas não coincidem", "error")
+            return redirect('/register_fisio')
+
+        # ✅ Validação de idade mínima (22 anos)
+        try:
+            data_nasc = datetime.strptime(data_nasc_str, '%Y-%m-%d').date()
+            hoje = date.today()
+            idade = hoje.year - data_nasc.year - ((hoje.month, hoje.day) < (data_nasc.month, data_nasc.day))
+
+            if idade < 22:
+                flash("Você deve ter pelo menos 22 anos para se registrar como fisioterapeuta.", "error")
+                return redirect('/register_fisio')
+        except ValueError:
+            flash("Data de nascimento inválida.", "error")
             return redirect('/register_fisio')
 
         try:
@@ -163,7 +176,7 @@ def register_fisio():
                 'email': email,
                 'nome': nome,
                 'cpf': cpf,
-                'data_nasc': data_nasc,
+                'data_nasc': data_nasc_str,
                 'telefone': telefone,
                 'genero': genero,
                 'tipo': 'fisioterapeuta'  # controle de acesso
@@ -179,6 +192,7 @@ def register_fisio():
             return redirect('/register_fisio')
 
     return render_template('register_fisio.html')
+
 
 @app.route("/login_fisio", methods=["GET", "POST"])
 def login_fisio():
@@ -301,7 +315,7 @@ def login_paciente():
             session['user_id'] = uid
             session['email'] = email
             session['idToken'] = id_token
-            return redirect("painel_paciente")
+            return redirect("menu_paciente")
 
         except Exception as e:
             flash(f"Credenciais inválidas !", "danger")
@@ -316,6 +330,15 @@ def painel_paciente():
     if 'user_id' not in session:
         return redirect(url_for('login'))
     return render_template('painel_paciente.html')
+
+@app.route('/menu_paciente')
+@no_cache
+@login_required
+@tipo_usuario_required('paciente')
+def menu_paciente():
+    if 'user_id' not in session:
+        return redirect(url_for('home'))
+    return render_template('menu_paciente.html')
 
 @app.route('/evolucao_paciente')
 @login_required
@@ -418,6 +441,7 @@ def agendar():
 @app.route('/excluir/<id>')
 def excluir_agendamento(id):
     db.reference(f'agendamentos/{id}').delete()
+    flash("Agendamento excluido com sucesso!", "sucess")
     return redirect(url_for('meus_agendamentos_paciente'))
 
 @app.route('/editar/<id>', methods=['GET', 'POST'])
@@ -435,6 +459,7 @@ def editar_agendamento(id):
             'data': request.form['data-agendamento'],
             'horario': request.form['horario']
         })
+        flash("Agendamento editado com sucesso!", "error")  # ✅ aqui!
         return redirect(url_for('meus_agendamentos_paciente'))
 
     dados = ref.get()
@@ -485,7 +510,15 @@ def redefinir_senha():
             return redirect(url_for('redefinir_senha'))
         else:
             flash('E-mail de redefinição de senha enviado com sucesso!', 'success')
-            return redirect(url_for('home'))  # ou outra página que você queira
+
+@app.template_filter('datetimeformat')
+def datetimeformat(value, format='%d/%m/%Y'):
+    if isinstance(value, str):
+        try:
+            value = datetime.strptime(value, '%Y-%m-%d')  # ou %Y-%m-%d %H:%M:%S se tiver hora
+        except ValueError:
+            return value  # Retorna como está se não for uma data válida
+    return value.strftime(format)
 
     return render_template('redefinir_senha.html')
 if __name__ == '__main__':

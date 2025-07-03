@@ -3,74 +3,76 @@
 {% block title %}Configurações da Conta{% endblock %}
 
 {% block content %}
-<style>
-.form-config {
-  max-width: 500px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
 
-.form-config label {
-  font-weight: bold;
-}
+<div class="max-w-2xl mx-auto mt-10 bg-white shadow-md rounded-lg p-8">
+  <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">⚙️ Meus Dados</h2>
 
-.form-config input, .form-config select {
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-}
+  <form method="POST" class="space-y-5">
+    <!-- Nome -->
+    <div>
+      <label for="nome" class="block text-sm font-medium text-gray-700">Nome completo:</label>
+      <input type="text" id="nome" name="nome" maxlength="50" value="{{ dados.nome }}" required
+             class="mt-1 w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring-green-500 focus:border-green-500 text-gray-800">
+    </div>
 
-.form-config button {
-  background-color: #00b894;
-  color: white;
-  padding: 10px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: bold;
-}
+    <!-- Email -->
+    <div>
+      <label for="email" class="block text-sm font-medium text-gray-700">E-mail:</label>
+      <input type="email" id="email" name="email" maxlength="40" value="{{ dados.email }}" required
+             class="mt-1 w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring-green-500 focus:border-green-500 text-gray-800">
+    </div>
 
-.form-config button:hover {
-  background-color: #019875;
-}
-</style>
+    <!-- CPF -->
+    <div>
+      <label for="cpf" class="block text-sm font-medium text-gray-700">CPF:</label>
+      <input type="text" id="cpf" name="cpf" value="{{ dados.cpf }}" readonly
+             class="mt-1 w-full bg-gray-100 border border-gray-300 rounded-md p-2 text-gray-600 cursor-not-allowed">
+    </div>
 
-<h2>Meus Dados</h2>
+    <!-- Data de nascimento -->
+    <div>
+      <label for="data_nasc" class="block text-sm font-medium text-gray-700">Data de nascimento:</label>
+      <input type="date" id="data_nasc" name="data_nasc" value="{{ dados.data_nasc }}" readonly
+             class="mt-1 w-full bg-gray-100 border border-gray-300 rounded-md p-2 text-gray-600 cursor-not-allowed">
+    </div>
 
-<form method="POST" class="form-config">
-    <label for="nome">Nome completo:</label>
-    <input type="text" id="nome" name="nome" maxlength="50" value="{{ dados.nome }}" required>
+    <!-- Telefone -->
+    <div>
+      <label for="telefone" class="block text-sm font-medium text-gray-700">Telefone:</label>
+      <input type="text" id="telefone" name="telefone" maxlength="11" value="{{ dados.telefone }}" required
+             class="mt-1 w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring-green-500 focus:border-green-500 text-gray-800">
+    </div>
 
-    <label for="email">E-mail:</label>
-    <input type="email" id="email" name="email" maxlength="40" value="{{ dados.email }}" required>
-
-    <label for="cpf">CPF:</label>
-    <input type="text" id="cpf" name="cpf" value="{{ dados.cpf }}" readonly>
-
-    <label for="data_nasc">Data de nascimento:</label>
-    <input type="date" id="data_nasc" name="data_nasc" value="{{ dados.data_nasc }}" readonly>
-
-    <label for="telefone">Telefone:</label>
-    <input type="text" id="telefone" name="telefone" maxlength="11" value="{{ dados.telefone }}" required>
-
-    <label for="genero">Gênero:</label>
-    <select id="genero" name="genero" required>
+    <!-- Gênero -->
+    <div>
+      <label for="genero" class="block text-sm font-medium text-gray-700">Gênero:</label>
+      <select id="genero" name="genero" required
+              class="mt-1 w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring-green-500 focus:border-green-500 text-gray-800">
         <option value="Masculino" {% if dados.genero == 'Masculino' %}selected{% endif %}>Masculino</option>
         <option value="Feminino" {% if dados.genero == 'Feminino' %}selected{% endif %}>Feminino</option>
         <option value="Outro" {% if dados.genero == 'Outro' %}selected{% endif %}>Outro</option>
-    </select>
+      </select>
+    </div>
+
+    <!-- Flash messages -->
     {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-      <div class="alert alert-danger">
-        {% for category, message in messages %}
-          <p>{{ message }}</p>
-        {% endfor %}
-      </div>
-    {% endif %}
-  {% endwith %}
-    <button type="submit">Salvar Alterações</button>
-</form>
+      {% if messages %}
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+          {% for category, message in messages %}
+            <p>{{ message }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <!-- Botão -->
+    <div class="text-center">
+      <button type="submit"
+              class="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-md transition">
+        Salvar Alterações
+      </button>
+    </div>
+  </form>
+</div>
 
 {% endblock %}

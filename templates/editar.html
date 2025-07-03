@@ -5,24 +5,44 @@ Página Inicial
 {% endblock %}
 
 {% block content %}
+<div class="max-w-xl mx-auto bg-white p-8 rounded-xl shadow-md mt-6">
+  <h2 class="text-2xl font-semibold text-gray-800 mb-6 text-center">Editar Agendamento</h2>
 
-<form method="POST">
-  <label for="fisioterapeuta">Fisioterapeuta:</label>
-  <select name="fisioterapeuta" required>
-    {% for id, fisio in fisioterapeutas.items() %}
-      <option value="{{ id }}" {% if agendamento.fisioterapeuta == id %}selected{% endif %}>
-        {{ fisio.nome }}
-      </option>
-    {% endfor %}
-  </select>
+  <form method="POST" class="space-y-4">
+    <!-- Fisioterapeuta -->
+    <div>
+      <label for="fisioterapeuta" class="block text-sm font-medium text-gray-700">Fisioterapeuta:</label>
+      <select name="fisioterapeuta" id="fisioterapeuta" required
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500 text-gray-800">
+        {% for id, fisio in fisioterapeutas.items() %}
+          <option value="{{ id }}" {% if agendamento.fisioterapeuta == id %}selected{% endif %}>
+            {{ fisio.nome }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
 
-  <label for="data-agendamento">Data:</label>
-  <input type="date" name="data-agendamento" value="{{ agendamento.data }}" required>
+    <!-- Data -->
+    <div>
+      <label for="data-agendamento" class="block text-sm font-medium text-gray-700">Data:</label>
+      <input type="date" name="data-agendamento" id="data-agendamento" required
+             value="{{ agendamento.data }}"
+             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500 text-gray-800">
+    </div>
 
-  <label for="horario">Horário:</label>
-  <input type="time" name="horario" value="{{ agendamento.horario }}" required>
+    <!-- Horário -->
+    <div>
+      <label for="horario" class="block text-sm font-medium text-gray-700">Horário:</label>
+      <input type="time" name="horario" value="{{ agendamento.horario }}" min="08:00" max="18:00" step="3600" required>
+    </div>
 
-  <button type="submit">Salvar alterações</button>
-</form>
-
+    <!-- Botão -->
+    <div class="text-center">
+      <button type="submit"
+              class="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-md transition">
+        Salvar Alterações
+      </button>
+    </div>
+  </form>
+</div>
 {% endblock %}
