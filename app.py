@@ -20,11 +20,14 @@ from firebase_admin import credentials
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY")
 
-cred_path = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
-cred = credentials.Certificate(cred_path)
-firebase_admin.initialize_app(cred, {
-    'databaseURL': os.getenv("FIREBASE_DATABASE_URL")
-})
+#cred_path = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
+#cred = credentials.Certificate(cred_path)
+#firebase_admin.initialize_app(cred, {
+#    'databaseURL': os.getenv("FIREBASE_DATABASE_URL")
+#})
+
+cred_dict = json.loads(os.environ.get("GOOGLE_APPLICATION_CREDENTIALS_JSON"))
+cred = credentials.Certificate(cred_dict)
 
 config = {
     "apiKey": os.getenv("FIREBASE_API_KEY"),
