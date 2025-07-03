@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
-import firebase_admin
 import pyrebase
 from firebase_admin import credentials, auth, db
 from werkzeug.security import generate_password_hash
