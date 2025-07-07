@@ -10,6 +10,20 @@
 
     <div>
       <label for="fisioterapeuta" class="block text-gray-700 font-semibold mb-1">Selecione um fisioterapeuta:</label>
+      {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="mb-4 p-4 rounded-lg 
+                  {% if category == 'erro' %}
+                    bg-red-100 text-red-800 border border-red-300
+                  {% else %}
+                    bg-blue-100 text-blue-800 border border-blue-300
+                  {% endif %}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
       <select id="fisioterapeuta" name="fisioterapeuta" required
               class="w-full rounded-lg border border-gray-300 p-3 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-400">
         <option value="" disabled selected>-- Escolha um profissional --</option>
@@ -28,19 +42,16 @@
     <div>
       <label for="horario" class="block text-gray-700 font-semibold mb-1">Selecione o horário:</label>
       <select id="horario" name="horario" required
-              class="w-full rounded-lg border border-gray-300 p-3 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-400">
-        <option value="" disabled selected>-- Escolha um horário --</option>
-        <option value="08">08:00</option>
-        <option value="09">09:00</option>
-        <option value="10">10:00</option>
-        <option value="11">11:00</option>
-        <option value="14">14:00</option>
-        <option value="15">15:00</option>
-        <option value="16">16:00</option>
-        <option value="17">17:00</option>
-        <option value="18">18:00</option>
-        <option value="19">19:00</option>
-        <option value="20">20:00</option>
+        class="w-full rounded-lg border border-gray-300 p-3 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-400">
+      <option value="" disabled selected>-- Escolha um horário --</option>
+      <option value="08:00">08:00</option>
+      <option value="09:00">09:00</option>
+      <option value="10:00">10:00</option>
+      <option value="11:00">11:00</option>
+      <option value="13:00">13:00</option>
+      <option value="14:00">14:00</option>
+      <option value="15:00">15:00</option>
+      <option value="16:00">16:00</option>
       </select>
     </div>
 

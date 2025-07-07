@@ -20,7 +20,7 @@
       <img src="{{ url_for('static', filename='img/fisiomais.png') }}" alt="FisioMais+ Logo" class="mx-auto max-w-[180px]">
     </div>
     <nav class="flex flex-col mt-4 text-white font-medium">
-      <a href="{{ url_for('menu_paciente') }}" class="px-4 py-3 hover:bg-green-400 transition-colors">🏠 Menu Paciente</a>
+      <a href="{{ url_for('painel_paciente') }}" class="px-4 py-3 hover:bg-green-400 transition-colors">🏠 Menu Paciente</a>
       <a href="{{ url_for('agendar') }}" class="px-4 py-3 hover:bg-green-400 transition-colors">📅 Agendamentos</a>
       <a href="{{ url_for('evolucao_paciente') }}" class="px-4 py-3 hover:bg-green-400 transition-colors">📈 Evolução</a>
       <a href="{{ url_for('exercicios_paciente') }}" class="px-4 py-3 hover:bg-green-400 transition-colors">🏋🏽 Exercícios</a>
@@ -29,10 +29,43 @@
     </nav>
   </aside>
 
-  <!-- Conteúdo -->
+  <!-- Conteúdo principal -->
   <main class="ml-56 w-full p-6">
     {% block content %}
-    <!-- Aqui vai o conteúdo das páginas -->
+    <!-- Conteúdo padrão (caso não sobrescreva) -->
+    <div class="max-w-5xl mx-auto py-12 px-6">
+      <h1 class="text-3xl font-bold text-center text-gray-800 mb-10">Olá! O que você deseja fazer?</h1>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+        <a href="{{ url_for('agendar') }}"
+           class="bg-white p-8 rounded-2xl shadow-md hover:shadow-xl border border-gray-200 text-center transition-all duration-300 hover:bg-blue-50">
+          <div class="text-5xl">📅</div>
+          <h2 class="mt-4 text-xl font-semibold text-gray-800">Agendamentos</h2>
+          <p class="mt-2 text-gray-600 text-sm">Visualize e gerencie suas consultas.</p>
+        </a>
+
+        <a href="{{ url_for('evolucao_paciente') }}"
+           class="bg-white p-8 rounded-2xl shadow-md hover:shadow-xl border border-gray-200 text-center transition-all duration-300 hover:bg-green-50">
+          <div class="text-5xl">📈</div>
+          <h2 class="mt-4 text-xl font-semibold text-gray-800">Evolução</h2>
+          <p class="mt-2 text-gray-600 text-sm">Acompanhe seu progresso de forma clara.</p>
+        </a>
+
+        <a href="{{ url_for('exercicios_paciente') }}"
+           class="bg-white p-8 rounded-2xl shadow-md hover:shadow-xl border border-gray-200 text-center transition-all duration-300 hover:bg-yellow-50">
+          <div class="text-5xl">🏋🏽</div>
+          <h2 class="mt-4 text-xl font-semibold text-gray-800">Exercícios</h2>
+          <p class="mt-2 text-gray-600 text-sm">Acesse os treinos recomendados pelo fisioterapeuta.</p>
+        </a>
+
+        <a href="{{ url_for('config_paciente') }}"
+           class="bg-white p-8 rounded-2xl shadow-md hover:shadow-xl border border-gray-200 text-center transition-all duration-300 hover:bg-gray-100">
+          <div class="text-5xl">⚙️</div>
+          <h2 class="mt-4 text-xl font-semibold text-gray-800">Meus Dados</h2>
+          <p class="mt-2 text-gray-600 text-sm">Atualize suas informações de contato e perfil.</p>
+        </a>
+      </div>
+    </div>
     {% endblock %}
   </main>
 
