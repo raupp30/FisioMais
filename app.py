@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
+from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify, json
 import pyrebase, firebase_admin
 from firebase_admin import credentials, auth, db
 from werkzeug.security import generate_password_hash
@@ -17,12 +17,12 @@ app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY")
 
 # EXCLUSIVO LOCAL #
-cred_path = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
-cred = credentials.Certificate(cred_path)
+#cred_path = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
+#cred = credentials.Certificate(cred_path)
 
 # EXCLUSIVO DEPLOYS #
-#cred_dict = json.loads(os.environ.get("GOOGLE_APPLICATION_CREDENTIALS_JSON"))
-#cred = credentials.Certificate(cred_dict)
+cred_dict = json.loads(os.environ.get("GOOGLE_APPLICATION_CREDENTIALS_JSON"))
+cred = credentials.Certificate(cred_dict)
 firebase_admin.initialize_app(cred, {
     'databaseURL': os.getenv("FIREBASE_DATABASE_URL")
 })
