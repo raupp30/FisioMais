@@ -1,6 +1,6 @@
 {% extends 'painel_paciente.html' %}
 
-{% block title %}Minha Evolução{% endblock %}
+{% block title %}Evolução | Paciente{% endblock %}
 
 {% block content %}
 <div class="max-w-4xl mx-auto p-6 bg-white rounded-xl shadow">
@@ -25,6 +25,7 @@
   {% if evolucoes %}
     {% for evo in evolucoes %}
       <div class="border-l-4 border-blue-400 p-4 mb-4 bg-blue-50 rounded transition duration-300 hover:shadow-md">
+        <p><strong>Fisioterapeuta:</strong> {{ evo.fisioterapeuta }}</p>
         <p><strong>Data:</strong> {{ evo.data|datetimeformat }}</p>
         <p><strong>Horário:</strong> {{ evo.horario }}</p>
         <p><strong>Observações:</strong> {{ evo.observacoes }}</p>

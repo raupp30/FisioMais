@@ -1,8 +1,191 @@
 {% extends 'painel_paciente.html' %}
-
-{% block title %}Página Inicial{% endblock %}
-
+{% block title %}Exercícios | Paciente{% endblock %}
 {% block content %}
-<h1>Bem-vindo à Página Inicial PACIENTE</h1>
-<p>Conteúdo da home.</p>
+<div class="max-w-5xl mx-auto py-10 px-4 bg-gray-100 min-h-screen">
+  <h1 class="text-4xl font-bold text-center text-blue-800 mb-10">Exercícios</h1>
+
+  {% set grupos = [
+    {
+      'nome': 'Pescoço',
+      'icone': '🦱',
+      'cor': 'border-purple-500',
+      'exercicios': [
+        {'titulo': 'Inclinação lateral do pescoço', 'passos': [
+          'Sente-se com a postura ereta.',
+          'Incline a cabeça lentamente para o lado, aproximando a orelha do ombro.',
+          'Segure por 20 segundos e repita do outro lado.'
+        ]},
+        {'titulo': 'Rotação cervical', 'passos': [
+          'Gire a cabeça lentamente para olhar por cima do ombro.',
+          'Mantenha por 10 segundos.',
+          'Volte ao centro e repita para o outro lado.'
+        ]}
+      ]
+    },
+    {
+      'nome': 'Ombros',
+      'icone': '🦻',
+      'cor': 'border-yellow-500',
+      'exercicios': [
+        {'titulo': 'Elevação de ombros', 'passos': [
+          'Eleve os ombros em direção às orelhas.',
+          'Segure por 5 segundos e relaxe.'
+        ]},
+        {'titulo': 'Rotacão de ombros', 'passos': [
+          'Gire os ombros para frente e depois para trás por 30 segundos.'
+        ]}
+      ]
+    },
+    {
+      'nome': 'Coluna',
+      'icone': '🦵',
+      'cor': 'border-green-500',
+      'exercicios': [
+        {'titulo': 'Extensão lombar', 'passos': [
+          'Deite-se de barriga para baixo e apoie os antebraços.',
+          'Levante suavemente o peito do chão e mantenha por 10 segundos.'
+        ]},
+        {'titulo': 'Gato e vaca', 'passos': [
+          'Em quatro apoios, alterne entre curvar e arquear a coluna.'
+        ]}
+      ]
+    },
+    {
+      'nome': 'Quadril',
+      'icone': '🏋️',
+      'cor': 'border-pink-500',
+      'exercicios': [
+        {'titulo': 'Ponte', 'passos': [
+          'Deite de barriga para cima, flexione os joelhos.',
+          'Levante o quadril e mantenha por 5 segundos.'
+        ]},
+        {'titulo': 'Abdução de quadril em decûito lateral', 'passos': [
+          'Deitado de lado, levante a perna de cima até a altura do quadril.'
+        ]}
+      ]
+    },
+    {
+      'nome': 'Joelhos',
+      'icone': '🧼',
+      'cor': 'border-blue-500',
+      'exercicios': [
+        {'titulo': 'Extensão de joelho sentado', 'passos': [
+          'Sente-se em uma cadeira e estenda a perna devagar.',
+          'Mantenha por 5 segundos.'
+        ]},
+        {'titulo': 'Agachamento parcial', 'passos': [
+          'Com os pés afastados, agache até 45º e volte.'
+        ]}
+      ]
+    },
+    {
+      'nome': 'Tornozelos',
+      'icone': '🧼',
+      'cor': 'border-indigo-500',
+      'exercicios': [
+        {'titulo': 'Flexão plantar', 'passos': [
+          'Empurre o pé para baixo como se fosse apertar um acelerador.'
+        ]},
+        {'titulo': 'Flexão dorsal', 'passos': [
+          'Puxe os dedos do pé para cima em direção ao joelho.'
+        ]}
+      ]
+    },
+    {
+      'nome': 'Membros Superiores',
+      'icone': '💪',
+      'cor': 'border-orange-500',
+      'exercicios': [
+        {'titulo': 'Flexão de cotovelo', 'passos': [
+          'Com os braços ao lado do corpo, dobre os cotovelos para cima e para baixo.'
+        ]},
+        {'titulo': 'Extensão de punho', 'passos': [
+          'Com a palma da mão para baixo, levante a mão mantendo o antebraço parado.'
+        ]}
+      ]
+    },
+    {
+      'nome': 'Membros Inferiores',
+      'icone': '🧼',
+      'cor': 'border-red-500',
+      'exercicios': [
+        {'titulo': 'Elevação de perna reta', 'passos': [
+          'Deitado, mantenha uma perna esticada e levante-a até 45º.'
+        ]},
+        {'titulo': 'Flexão plantar com elástico', 'passos': [
+          'Com uma faixa elástica presa ao pé, empurre contra a resistência.'
+        ]}
+      ]
+    },
+    {
+      'nome': 'Respiração / Mobilidade torácica',
+      'icone': '🌬️',
+      'cor': 'border-teal-500',
+      'exercicios': [
+        {'titulo': 'Respiração diafragmática', 'passos': [
+          'Coloque as mãos sobre o abdômen e inspire profundamente pelo nariz.',
+          'Sinta a barriga subir e depois solte pela boca.'
+        ]},
+        {'titulo': 'Expansão costal', 'passos': [
+          'Inspire profundamente expandindo o tórax lateralmente.',
+          'Segure por 3 segundos e solte o ar devagar.'
+        ]}
+      ]
+    },
+    {
+      'nome': 'Equilíbrio e Coordenação',
+      'icone': '📏',
+      'cor': 'border-cyan-500',
+      'exercicios': [
+        {'titulo': 'Equilíbrio unipodal', 'passos': [
+          'Fique em pé em uma perna só por 30 segundos.',
+          'Troque de perna e repita.'
+        ]},
+        {'titulo': 'Marcha estacionária', 'passos': [
+          'Simule caminhada parado, elevando alternadamente os joelhos.'
+        ]}
+      ]
+    }
+  ] %}
+
+  {% for grupo in grupos %}
+    <div class="mb-6">
+      <button onclick="toggleGrupo('{{ grupo.nome | replace(' ', '_') }}')"
+              class="w-full text-left bg-white border-l-4 {{ grupo.cor }} border p-4 rounded-lg shadow hover:bg-gray-50 text-xl font-semibold text-gray-800 transition">
+        {{ grupo.icone }} {{ grupo.nome }}
+      </button>
+
+      <div id="{{ grupo.nome | replace(' ', '_') }}" class="hidden mt-2 pl-4">
+        {% for ex in grupo.exercicios %}
+          <div class="mb-4">
+            <button class="w-full text-left bg-white border border-gray-300 p-3 rounded shadow hover:bg-blue-50"
+                    onclick="toggleExercicio('{{ ex.titulo | replace(' ', '_') }}')">
+              {{ ex.titulo }}
+            </button>
+            <div id="{{ ex.titulo | replace(' ', '_') }}" class="hidden mt-2 bg-white p-4 border-l-4 {{ grupo.cor }} rounded shadow text-gray-700">
+              <p><strong>Como fazer:</strong></p>
+              <ul class="list-disc pl-6 mt-2">
+                {% for passo in ex.passos %}
+                  <li>{{ passo }}</li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+<script>
+  function toggleGrupo(id) {
+    const grupo = document.getElementById(id);
+    grupo.classList.toggle('hidden');
+  }
+
+  function toggleExercicio(id) {
+    const el = document.getElementById(id);
+    el.classList.toggle('hidden');
+  }
+</script>
 {% endblock %}

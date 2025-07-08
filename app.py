@@ -101,23 +101,6 @@ def privacity():
 def painel_fisio():
     return render_template('admin/painel_fisio.html')
 
-@app.route('/horarios_disponiveis/<fisio_id>/<data>', methods=['GET'])
-def horarios_disponiveis(fisio_id, data):
-    try:
-        ref = db.reference(f'horarios_disponiveis/{fisio_id}/{data}')
-        horarios = ref.get()
-
-        if not horarios:
-            return jsonify([])  # Nenhum horário registrado para a data
-
-        # Filtra apenas os horários marcados como 'livre'
-        horarios_livres = [hora for hora, status in horarios.items() if status == 'livre']
-        return jsonify(horarios_livres)
-
-    except Exception as e:
-        print(f"Erro ao buscar horários: {e}")
-        return jsonify([]), 500
-
 @app.route('/admin/meus_agendamentos')
 @login_required
 @tipo_usuario_required('fisioterapeuta')
@@ -159,6 +142,13 @@ def meus_agendamentos_fisio():
                 filtro in str(ag.get('status', '')).lower()
             )
         agendamentos = list(filter(contem_texto, agendamentos))
+    agendamentos.sort(
+    key=lambda x: (
+        0 if x.get('status', '').lower() == 'pendente' else 1,  # pendente vem antes
+        datetime.strptime(f"{x['data']} {x['horario']}", "%Y-%m-%d %H:%M")
+    ),
+    reverse=False
+)
 
     return render_template('admin/meus_agendamentos.html', agendamentos=agendamentos)
 
@@ -237,6 +227,10 @@ def evolucao():
             )
         evolucoes = list(filter(contem_texto, evolucoes))
 
+    evolucoes.sort(
+    key=lambda x: datetime.strptime(f"{x['data']} {x['horario']}", "%Y-%m-%d %H:%M"),
+    reverse=True
+)
     return render_template('admin/evolucao.html', evolucoes=evolucoes)
 from datetime import datetime, date
 
@@ -459,7 +453,7 @@ def painel_paciente():
 
 @app.route('/evolucao_paciente')
 @login_required
-@tipo_usuario_required('paciente')  # Se você tiver esse decorador
+@tipo_usuario_required('paciente')
 def evolucao_paciente():
     user_id = session.get('user_id')
 
@@ -469,27 +463,39 @@ def evolucao_paciente():
     evolucoes = []
     if dados:
         for id, ag in dados.items():
-            if ag.get('status') == 'finalizado':
+            if ag.get('status', '').lower() == 'finalizado':
+                fisio_id = ag.get('fisioterapeuta_id')
+                fisio_nome = 'Desconhecido'
+
+                if fisio_id:
+                    fisio_nome = db.reference(f'usuarios/{fisio_id}/nome').get() or 'Desconhecido'
+
                 evolucoes.append({
                     'id': id,
+                    'fisioterapeuta': fisio_nome,
                     'data': ag.get('data'),
                     'horario': ag.get('horario'),
-                    'observacoes': ag.get('observacoes'),
+                    'observacoes': ag.get('observacoes', '')
                 })
 
     # Filtro por texto (opcional)
     filtro = request.args.get('filtro', '').lower()
     if filtro:
-        def contem_texto(evo):
-            return (
-                filtro in str(evo.get('data', '')).lower() or
-                filtro in str(evo.get('horario', '')).lower() or
-                filtro in str(evo.get('observacoes', '')).lower()
-            )
-        evolucoes = list(filter(contem_texto, evolucoes))
+        evolucoes = [
+            evo for evo in evolucoes if
+            filtro in evo['fisioterapeuta'].lower() or
+            filtro in evo['data'].lower() or
+            filtro in evo['horario'].lower() or
+            filtro in evo['observacoes'].lower()
+        ]
+
+    # Ordena por data/hora decrescente
+    evolucoes.sort(
+        key=lambda x: datetime.strptime(f"{x['data']} {x['horario']}", "%Y-%m-%d %H:%M"),
+        reverse=True
+    )
 
     return render_template('evolucao_paciente.html', evolucoes=evolucoes)
-
 
 @app.route('/exercicios_paciente')
 @login_required
@@ -546,14 +552,40 @@ def logout():
     flash("Logout realizado com sucesso!", "success")
     return redirect('/')
 
+@app.route('/horarios_disponiveis')
+@login_required
+def horarios_disponiveis():
+    data = request.args.get('data')
+    fisio_id = request.args.get('fisioterapeuta_id')
+
+    if not data or not fisio_id:
+        return jsonify([])
+
+    # Gera horários válidos: 07:00 - 19:00, exceto 12:00
+    horarios_base = [f"{h:02d}:00" for h in range(7, 19) if h != 12]
+
+    # Verifica ocupação no Firebase
+    ref = db.reference(f'horarios_disponiveis/{fisio_id}/{data}')
+    ocupados = ref.get() or {}
+
+    horarios_disponiveis = []
+    for horario in horarios_base:
+        if ocupados.get(horario) != 'ocupado':
+            horarios_disponiveis.append({
+                'valor': horario,
+                'label': f"{horario} - {int(horario[:2]) + 1:02d}:00 (1 vaga restante)"
+            })
+
+    return jsonify(horarios_disponiveis)
+
+
 @app.route('/agendar', methods=['GET', 'POST'])
 @login_required
 @tipo_usuario_required('paciente')
 def agendar():
-    # Buscar todos os usuários com tipo = fisioterapeuta
     usuarios_ref = db.reference('usuarios')
     todos_usuarios = usuarios_ref.get()
-    
+
     fisioterapeutas = []
     if todos_usuarios:
         for id, user in todos_usuarios.items():
@@ -570,12 +602,12 @@ def agendar():
         estado = horario_ref.get()
         if estado == 'ocupado':
             flash('⛔ Este horário já foi agendado. Por favor, escolha outro.', 'erro')
-            return render_template('paciente/agendar.html', fisioterapeutas=fisioterapeutas)
+            return render_template('agendar.html', fisioterapeutas=fisioterapeutas)
 
         # Buscar nome do fisioterapeuta
         fisioterapeuta_nome = usuarios_ref.child(fisioterapeuta_id).child('nome').get()
 
-        # Salvar no Firebase
+        # Salvar agendamento no Firebase
         db.reference('agendamentos').push({
             'fisioterapeuta_id': fisioterapeuta_id,
             'fisioterapeuta_nome': fisioterapeuta_nome,
@@ -591,40 +623,87 @@ def agendar():
 
         return redirect(url_for('meus_agendamentos_paciente'))
 
-    return render_template('agendar.html', fisioterapeutas=fisioterapeutas)
-
+    return render_template('agendar.html', fisioterapeutas=fisioterapeutas, current_date=date.today())
 
 @app.route('/excluir/<id>')
 @login_required
 @tipo_usuario_required('paciente')
 def excluir_agendamento(id):
-    db.reference(f'agendamentos/{id}').delete()
-    flash("Agendamento excluido com sucesso!", "error")
+    ref = db.reference(f'agendamentos/{id}')
+    agendamento = ref.get()
+    if not agendamento or agendamento.get('paciente_id') != session.get('user_id'):
+        flash("Agendamento não encontrado ou sem permissão.", "erro")
+        return redirect(url_for('meus_agendamentos_paciente'))
+
+    # Liberar horário ocupado
+    fisioterapeuta_id = agendamento.get('fisioterapeuta_id')
+    data = agendamento.get('data')
+    horario = agendamento.get('horario')
+    horario_ref = db.reference(f'horarios_disponiveis/{fisioterapeuta_id}/{data}/{horario}')
+    horario_ref.delete()
+
+    # Apagar agendamento
+    ref.delete()
+    flash("Agendamento excluído com sucesso!", "sucesso")
     return redirect(url_for('meus_agendamentos_paciente'))
+
 
 @app.route('/editar/<id>', methods=['GET', 'POST'])
 @login_required
 @tipo_usuario_required('paciente')
 def editar_agendamento(id):
+    paciente_id = session.get('user_id')
     ref = db.reference(f'agendamentos/{id}')
+    agendamento = ref.get()
 
-    # Referência para fisioterapeutas cadastrados
-    fisios_ref = db.reference('usuarios')
-    fisioterapeutas = fisios_ref.order_by_child('tipo').equal_to('fisioterapeuta').get()
-
-    if request.method == 'POST':
-        fisioterapeuta_id = request.form['fisioterapeuta']
-        ref.update({
-            'fisioterapeuta': fisioterapeuta_id,
-            'data': request.form['data-agendamento'],
-            'horario': request.form['horario']
-        })
-        flash("Agendamento editado com sucesso!", "sucess")  # ✅ aqui!
+    if not agendamento or agendamento.get('paciente_id') != paciente_id:
+        flash("Agendamento não encontrado ou sem permissão.", "erro")
         return redirect(url_for('meus_agendamentos_paciente'))
 
-    dados = ref.get()
-    return render_template('editar.html', id=id, agendamento=dados, fisioterapeutas=fisioterapeutas)
+    # Buscar fisioterapeutas
+    fisios_ref = db.reference('usuarios')
+    fisioterapeutas = fisios_ref.order_by_child('tipo').equal_to('fisioterapeuta').get() or {}
 
+    if request.method == 'POST':
+        novo_fisio_id = request.form['fisioterapeuta']
+        nova_data = request.form['data-agendamento']
+        novo_horario = request.form['horario']
+
+        # Se não mudou nada, redireciona
+        if (novo_fisio_id == agendamento.get('fisioterapeuta_id') and
+            nova_data == agendamento.get('data') and
+            novo_horario == agendamento.get('horario')):
+            flash("Nenhuma alteração feita.", "info")
+            return redirect(url_for('meus_agendamentos_paciente'))
+
+        # Verifica disponibilidade do novo horário
+        horario_ref = db.reference(f'horarios_disponiveis/{novo_fisio_id}/{nova_data}/{novo_horario}')
+        estado = horario_ref.get()
+        if estado == 'ocupado':
+            flash("⛔ Horário já está ocupado. Por favor, escolha outro.", "erro")
+            return render_template('editar.html', id=id, agendamento=agendamento, fisioterapeutas=fisioterapeutas)
+
+        # Libera horário antigo
+        horario_antigo_ref = db.reference(f'horarios_disponiveis/{agendamento.get("fisioterapeuta_id")}/{agendamento.get("data")}/{agendamento.get("horario")}')
+        horario_antigo_ref.delete()
+
+        # Marca novo horário como ocupado
+        horario_ref.set('ocupado')
+
+        # Atualiza dados do agendamento
+        fisioterapeuta_nome = fisios_ref.child(novo_fisio_id).child('nome').get()
+        ref.update({
+            'fisioterapeuta_id': novo_fisio_id,
+            'fisioterapeuta_nome': fisioterapeuta_nome,
+            'data': nova_data,
+            'horario': novo_horario
+        })
+
+        flash("Agendamento editado com sucesso!", "sucesso")
+        return redirect(url_for('meus_agendamentos_paciente'))
+
+    # GET: renderiza template
+    return render_template('editar.html', id=id, agendamento=agendamento, fisioterapeutas=fisioterapeutas)
 
 @app.route('/meus_agendamentos_paciente')
 @login_required
@@ -636,24 +715,38 @@ def meus_agendamentos_paciente():
     ref = db.reference('agendamentos')
 
     try:
-        # Busca todos os agendamentos
+        # Busca todos os agendamentos do paciente
         dados = ref.order_by_child('paciente_id').equal_to(user_id).get()
 
         agendamentos = []
         if dados:
             for id, ag in dados.items():
+                # ⛔️ Ignora se o status for 'finalizado'
+                if ag.get('status', '').lower() == 'finalizado':
+                    continue
+
                 agendamentos.append({
                     'id': id,
                     'fisioterapeuta_nome': ag.get('fisioterapeuta_nome'),
                     'data': ag.get('data'),
                     'horario': ag.get('horario'),
+                    'status': ag.get('status', 'pendente')
                 })
 
+        agendamentos.sort(
+            key=lambda x: (
+                0 if x.get('status', '').lower() == 'pendente' else 1,
+                datetime.strptime(f"{x['data']} {x['horario']}", "%Y-%m-%d %H:%M")
+            ),
+            reverse=False
+        )
+
         return render_template('meus_agendamentos_paciente.html', agendamentos=agendamentos)
-    
+
     except Exception as e:
         print(f"Erro ao buscar agendamentos: {e}")
         return "Erro ao buscar seus agendamentos", 500
+
 
 @app.route('/redefinir_senha', methods=['GET', 'POST'])
 def redefinir_senha():
@@ -670,6 +763,9 @@ def redefinir_senha():
             return redirect(url_for('redefinir_senha'))
         else:
             flash('E-mail de redefinição de senha enviado com sucesso!', 'success')
+            return redirect(url_for('redefinir_senha'))  # ✅ ADICIONADO!
+
+    return render_template('redefinir_senha.html')  # ✅ Para o GET
 
 @app.template_filter('datetimeformat')
 def datetimeformat(value, format='%d/%m/%Y'):
