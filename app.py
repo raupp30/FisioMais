@@ -98,11 +98,13 @@ def privacity():
 @app.route('/admin/painel_fisio')
 @login_required
 @tipo_usuario_required('fisioterapeuta')
+@no_cache
 def painel_fisio():
     return render_template('admin/painel_fisio.html')
 
 @app.route('/admin/meus_agendamentos')
 @login_required
+@no_cache
 @tipo_usuario_required('fisioterapeuta')
 def meus_agendamentos_fisio():
     user_id = session.get('user_id')
@@ -154,6 +156,7 @@ def meus_agendamentos_fisio():
 
 @app.route('/admin/atualizar_agendamento/<id>', methods=['POST'])
 @login_required
+@no_cache
 @tipo_usuario_required('fisioterapeuta')
 def atualizar_agendamento(id):
     acao = request.form.get('acao')
@@ -178,6 +181,7 @@ def atualizar_agendamento(id):
 
 @app.route('/finalizar_agendamento/<string:id>', methods=['POST'])
 @login_required
+@no_cache
 @tipo_usuario_required('fisioterapeuta')
 def finalizar_agendamento(id):
     observacoes = request.form.get('observacoes', '').strip()
@@ -191,6 +195,7 @@ def finalizar_agendamento(id):
 
 @app.route('/admin/evolucao')
 @login_required
+@no_cache
 @tipo_usuario_required('fisioterapeuta')
 def evolucao():
     user_id = session.get('user_id')
@@ -236,6 +241,7 @@ from datetime import datetime, date
 
 @app.route('/admin/evolucao/editar_obs/<agendamento_id>', methods=['GET', 'POST'], endpoint='editar_obs_evolucao')
 @login_required
+@no_cache
 @tipo_usuario_required('fisioterapeuta')
 def editar_observacoes(agendamento_id):
     ag_ref = db.reference(f'agendamentos/{agendamento_id}')
@@ -342,6 +348,7 @@ def verificar_email_existente(email):
 
 @app.route('/admin/config_fisio', methods=['GET', 'POST'])
 @login_required
+@no_cache
 @tipo_usuario_required('fisioterapeuta')
 def config_fisio():
     user_id = session.get('user_id')
@@ -499,12 +506,14 @@ def evolucao_paciente():
 
 @app.route('/exercicios_paciente')
 @login_required
+@no_cache
 @tipo_usuario_required('paciente')
 def exercicios_paciente():
     return render_template('exercicios_paciente.html')
 
 @app.route('/config_paciente', methods=['GET', 'POST'])
 @login_required
+@no_cache
 @tipo_usuario_required('paciente')
 def config_paciente():
     user_id = session.get('user_id')
@@ -554,6 +563,7 @@ def logout():
 
 @app.route('/horarios_disponiveis')
 @login_required
+@no_cache
 def horarios_disponiveis():
     data = request.args.get('data')
     fisio_id = request.args.get('fisioterapeuta_id')
@@ -581,6 +591,7 @@ def horarios_disponiveis():
 
 @app.route('/agendar', methods=['GET', 'POST'])
 @login_required
+@no_cache
 @tipo_usuario_required('paciente')
 def agendar():
     usuarios_ref = db.reference('usuarios')
@@ -627,6 +638,7 @@ def agendar():
 
 @app.route('/excluir/<id>')
 @login_required
+@no_cache
 @tipo_usuario_required('paciente')
 def excluir_agendamento(id):
     ref = db.reference(f'agendamentos/{id}')
@@ -650,6 +662,7 @@ def excluir_agendamento(id):
 
 @app.route('/editar/<id>', methods=['GET', 'POST'])
 @login_required
+@no_cache
 @tipo_usuario_required('paciente')
 def editar_agendamento(id):
     paciente_id = session.get('user_id')
@@ -707,6 +720,7 @@ def editar_agendamento(id):
 
 @app.route('/meus_agendamentos_paciente')
 @login_required
+@no_cache
 @tipo_usuario_required('paciente')
 def meus_agendamentos_paciente():
     user_id = session.get('user_id')  # ID do paciente logado
