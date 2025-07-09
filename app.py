@@ -64,7 +64,7 @@ def login_required(f):
     def wrapper(*args, **kwargs):
         if 'user_id' not in session:
             flash("Você precisa estar logado para acessar esta página.", "warning")
-            return redirect(url_for('home'))  # ou login_paciente conforme
+            return redirect(url_for('home'))
         return f(*args, **kwargs)
     return wrapper
 
@@ -116,8 +116,6 @@ def meus_agendamentos_fisio():
     if dados:
         for id, ag in dados.items():
             paciente_id = ag.get('paciente_id')
-            
-            # Buscar nome do paciente
             paciente_ref = db.reference(f'usuarios/{paciente_id}')
             paciente = paciente_ref.get()
             paciente_nome = paciente.get('nome') if paciente else 'Desconhecido'
@@ -133,7 +131,6 @@ def meus_agendamentos_fisio():
                 'observacoes': ag.get('observacoes', '')
             })
 
-    # ⬇️ Correto: pega o filtro FORA do loop
     filtro = request.args.get('filtro', '').lower()
     if filtro:
         def contem_texto(ag):
@@ -152,7 +149,6 @@ def meus_agendamentos_fisio():
     ),
     reverse=False
 )
-
     return render_template('admin/meus_agendamentos.html', agendamentos=agendamentos)
 
 @app.route('/admin/atualizar_agendamento/<id>', methods=['POST'])
@@ -201,7 +197,6 @@ def finalizar_agendamento(id):
 def evolucao():
     user_id = session.get('user_id')
 
-    # Busca os agendamentos finalizados do fisioterapeuta logado
     agendamentos_ref = db.reference('agendamentos')
     dados = agendamentos_ref.order_by_child('fisioterapeuta_id').equal_to(user_id).get()
 
@@ -221,7 +216,6 @@ def evolucao():
                     'observacoes': ag.get('observacoes'),
                 })
 
-    # Filtro genérico via caixa de texto
     filtro = request.args.get('filtro', '').lower()
     if filtro:
         def contem_texto(evo):
@@ -280,7 +274,7 @@ def register_fisio():
             flash("Senhas não coincidem", "error")
             return redirect('/register_fisio')
 
-        # ✅ Validação de idade mínima (22 anos)
+        # validar idade
         try:
             data_nasc = datetime.strptime(data_nasc_str, '%Y-%m-%d').date()
             hoje = date.today()
@@ -294,11 +288,11 @@ def register_fisio():
             return redirect('/register_fisio')
 
         try:
-            # ✅ Cria o usuário no Firebase Auth usando Admin SDK
+            # cria usuario firebase usando Admin SDK
             user = auth.create_user(email=email, password=senha)
             uid = user.uid
 
-            # ✅ Salva os dados no Realtime Database via Admin SDK
+            # salva dados no firebase usando Admin SDK
             dados_fisio = {
                 'email': email,
                 'nome': nome,
@@ -343,9 +337,9 @@ def login_fisio():
 def verificar_email_existente(email):
     try:
         user = auth.get_user_by_email(email)
-        return True  # E-mail já está em uso
+        return True  # email em uso
     except auth.UserNotFoundError:
-        return False  # E-mail disponível
+        return False  # email disp
 
 @app.route('/admin/config_fisio', methods=['GET', 'POST'])
 @login_required
@@ -358,12 +352,10 @@ def config_fisio():
         flash("Você precisa estar logado para acessar essa página.")
         return redirect('/login_fisio')
     
-    # Buscando dados do paciente no Firebase
     paciente_data = pb_db.child("usuarios").child(user_id).get(token).val()
     dados_usuario = pb_db.child("usuarios").child(user_id).get(token).val()
     
     if request.method == 'POST':
-        # Aqui você pode atualizar os dados do usuário, por exemplo:
         nome = request.form['nome']
         email = request.form['email']
         cpf = request.form['cpf']
@@ -407,11 +399,9 @@ def register_paciente():
             return redirect('register_paciente')
 
         try:
-            # ✅ Cria o usuário usando o Admin SDK
             user = auth.create_user(email=email, password=senha)
             uid = user.uid
 
-            # ✅ Salva os dados no DB via Admin SDK (ignora regras)
             db.reference(f'usuarios/{uid}').set({
                 'email': email,
                 'nome': nome,
@@ -486,7 +476,6 @@ def evolucao_paciente():
                     'observacoes': ag.get('observacoes', '')
                 })
 
-    # Filtro por texto (opcional)
     filtro = request.args.get('filtro', '').lower()
     if filtro:
         evolucoes = [
@@ -497,7 +486,7 @@ def evolucao_paciente():
             filtro in evo['observacoes'].lower()
         ]
 
-    # Ordena por data/hora decrescente
+    # ordenar por data  /hora decrescente
     evolucoes.sort(
         key=lambda x: datetime.strptime(f"{x['data']} {x['horario']}", "%Y-%m-%d %H:%M"),
         reverse=True
@@ -524,12 +513,10 @@ def config_paciente():
         flash("Você precisa estar logado para acessar essa página.")
         return redirect('/login_paciente')
     
-    # Buscando dados do paciente no Firebase
     paciente_data = pb_db.child("usuarios").child(user_id).get(token).val()
     dados_usuario = pb_db.child("usuarios").child(user_id).get(token).val()
 
     if request.method == 'POST':
-        # Aqui você pode atualizar os dados do usuário, por exemplo:
         nome = request.form['nome']
         email = request.form['email']
         cpf = request.form['cpf']
@@ -574,10 +561,10 @@ def horarios_disponiveis():
     if not data or not fisio_id:
         return jsonify([])
 
-    # Gera horários válidos: 07:00 - 19:00, exceto 12:00
+    # gerar horários valido: 07:00 - 19:00, exceto 12:00
     horarios_base = [f"{h:02d}:00" for h in range(7, 19) if h != 12]
 
-    # Verifica ocupação no Firebase
+    # vrrificar ocupação no Firebase
     ref = db.reference(f'horarios_disponiveis/{fisio_id}/{data}')
     ocupados = ref.get() or {}
 
@@ -611,17 +598,17 @@ def agendar():
         data = request.form['data-agendamento']
         horario = request.form['horario']
 
-        # Verificar se horário está ocupado
+        # verificar se horário está ocupado
         horario_ref = db.reference(f'horarios_disponiveis/{fisioterapeuta_id}/{data}/{horario}')
         estado = horario_ref.get()
         if estado == 'ocupado':
             flash('⛔ Este horário já foi agendado. Por favor, escolha outro.', 'erro')
             return render_template('agendar.html', fisioterapeutas=fisioterapeutas)
 
-        # Buscar nome do fisioterapeuta
+        #  nome do fisioterapeuta
         fisioterapeuta_nome = usuarios_ref.child(fisioterapeuta_id).child('nome').get()
 
-        # Salvar agendamento no Firebase
+        # save
         db.reference('agendamentos').push({
             'fisioterapeuta_id': fisioterapeuta_id,
             'fisioterapeuta_nome': fisioterapeuta_nome,
@@ -632,7 +619,7 @@ def agendar():
             'observacoes': ''
         })
 
-        # Atualiza o horário como ocupado
+        # att o horário como ocupado
         horario_ref.set('ocupado')
 
         return redirect(url_for('meus_agendamentos_paciente'))
@@ -650,14 +637,14 @@ def excluir_agendamento(id):
         flash("Agendamento não encontrado ou sem permissão.", "erro")
         return redirect(url_for('meus_agendamentos_paciente'))
 
-    # Liberar horário ocupado
+    # libera horário ocupado
     fisioterapeuta_id = agendamento.get('fisioterapeuta_id')
     data = agendamento.get('data')
     horario = agendamento.get('horario')
     horario_ref = db.reference(f'horarios_disponiveis/{fisioterapeuta_id}/{data}/{horario}')
     horario_ref.delete()
 
-    # Apagar agendamento
+    # exclui agendamento
     ref.delete()
     flash("Agendamento excluído com sucesso!", "sucesso")
     return redirect(url_for('meus_agendamentos_paciente'))
@@ -676,7 +663,6 @@ def editar_agendamento(id):
         flash("Agendamento não encontrado ou sem permissão.", "erro")
         return redirect(url_for('meus_agendamentos_paciente'))
 
-    # Buscar fisioterapeutas
     fisios_ref = db.reference('usuarios')
     fisioterapeutas = fisios_ref.order_by_child('tipo').equal_to('fisioterapeuta').get() or {}
 
@@ -685,28 +671,28 @@ def editar_agendamento(id):
         nova_data = request.form['data-agendamento']
         novo_horario = request.form['horario']
 
-        # Se não mudou nada, redireciona
+        # se não mudou nada redireciona
         if (novo_fisio_id == agendamento.get('fisioterapeuta_id') and
             nova_data == agendamento.get('data') and
             novo_horario == agendamento.get('horario')):
             flash("Nenhuma alteração feita.", "info")
             return redirect(url_for('meus_agendamentos_paciente'))
 
-        # Verifica disponibilidade do novo horário
+        # verificar disponibilidade do novo horário
         horario_ref = db.reference(f'horarios_disponiveis/{novo_fisio_id}/{nova_data}/{novo_horario}')
         estado = horario_ref.get()
         if estado == 'ocupado':
             flash("⛔ Horário já está ocupado. Por favor, escolha outro.", "erro")
             return render_template('editar.html', id=id, agendamento=agendamento, fisioterapeutas=fisioterapeutas)
 
-        # Libera horário antigo
+        # liberar horário velho
         horario_antigo_ref = db.reference(f'horarios_disponiveis/{agendamento.get("fisioterapeuta_id")}/{agendamento.get("data")}/{agendamento.get("horario")}')
         horario_antigo_ref.delete()
 
-        # Marca novo horário como ocupado
+        # marcar o novo horário como ocupado
         horario_ref.set('ocupado')
 
-        # Atualiza dados do agendamento
+        # att
         fisioterapeuta_nome = fisios_ref.child(novo_fisio_id).child('nome').get()
         ref.update({
             'fisioterapeuta_id': novo_fisio_id,
@@ -718,7 +704,6 @@ def editar_agendamento(id):
         flash("Agendamento editado com sucesso!", "sucesso")
         return redirect(url_for('meus_agendamentos_paciente'))
 
-    # GET: renderiza template
     return render_template('editar.html', id=id, agendamento=agendamento, fisioterapeutas=fisioterapeutas)
 
 @app.route('/meus_agendamentos_paciente')
@@ -726,19 +711,19 @@ def editar_agendamento(id):
 @no_cache
 @tipo_usuario_required('paciente')
 def meus_agendamentos_paciente():
-    user_id = session.get('user_id')  # ID do paciente logado
+    user_id = session.get('user_id')  # id pacient
 
-    # Referência ao banco
+    # ref ao banco
     ref = db.reference('agendamentos')
 
     try:
-        # Busca todos os agendamentos do paciente
+        # buscar todos os agendamentos do paciente
         dados = ref.order_by_child('paciente_id').equal_to(user_id).get()
 
         agendamentos = []
         if dados:
             for id, ag in dados.items():
-                # ⛔️ Ignora se o status for 'finalizado'
+                # ignora se for finalizado
                 if ag.get('status', '').lower() == 'finalizado':
                     continue
 
@@ -780,20 +765,19 @@ def redefinir_senha():
             return redirect(url_for('redefinir_senha'))
         else:
             flash('E-mail de redefinição de senha enviado com sucesso!', 'success')
-            return redirect(url_for('redefinir_senha'))  # ✅ ADICIONADO!
+            return redirect(url_for('redefinir_senha')) 
 
-    return render_template('redefinir_senha.html')  # ✅ Para o GET
+    return render_template('redefinir_senha.html')
 
 @app.template_filter('datetimeformat')
 def datetimeformat(value, format='%d/%m/%Y'):
     if isinstance(value, str):
         try:
-            value = datetime.strptime(value, '%Y-%m-%d')  # ou %Y-%m-%d %H:%M:%S se tiver hora
+            value = datetime.strptime(value, '%Y-%m-%d')
         except ValueError:
-            return value  # Retorna como está se não for uma data válida
+            return value
     return value.strftime(format)
 
-    return render_template('redefinir_senha.html')
 if __name__ == '__main__':
     app.run(debug=True)
 
