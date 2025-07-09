@@ -17,12 +17,12 @@ app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY")
 
 # EXCLUSIVO LOCAL #
-#cred_path = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
-#cred = credentials.Certificate(cred_path)
+cred_path = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
+cred = credentials.Certificate(cred_path)
 
 # EXCLUSIVO DEPLOYS #
-cred_dict = json.loads(os.environ.get("GOOGLE_APPLICATION_CREDENTIALS_JSON"))
-cred = credentials.Certificate(cred_dict)
+#cred_dict = json.loads(os.environ.get("GOOGLE_APPLICATION_CREDENTIALS_JSON"))
+#cred = credentials.Certificate(cred_dict)
 firebase_admin.initialize_app(cred, {
     'databaseURL': os.getenv("FIREBASE_DATABASE_URL")
 })
@@ -61,12 +61,12 @@ def home():
 
 def login_required(f):
     @wraps(f)
-    def decorated_function(*args, **kwargs):
+    def wrapper(*args, **kwargs):
         if 'user_id' not in session:
-            flash('Você precisa estar logado para acessar essa página.', 'warning')
-            return redirect(url_for('home'))  # ou para a página de login específica
+            flash("Você precisa estar logado para acessar esta página.", "warning")
+            return redirect(url_for('home'))  # ou login_paciente conforme
         return f(*args, **kwargs)
-    return decorated_function
+    return wrapper
 
 def tipo_usuario_required(tipo_esperado):
     def decorator(f):
@@ -557,6 +557,8 @@ def config_paciente():
     return render_template('config_paciente.html', dados=paciente_data)
 
 @app.route('/logout')
+@login_required
+@no_cache
 def logout():
     session.clear()
     flash("Logout realizado com sucesso!", "success")

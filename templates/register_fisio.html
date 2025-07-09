@@ -1,21 +1,24 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Registrar | Fisioterapeuta</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-cover bg-center bg-black bg-opacity-100 bg-[url('/static/img/fundo.jpg')] min-h-screen flex items-center justify-center">
+
+<body
+  class="bg-cover bg-center bg-black bg-opacity-100 bg-[url('/static/img/fundo.jpg')] min-h-screen flex items-center justify-center">
 
   <form method="POST" class="bg-white/10 backdrop-blur-md p-8 rounded-xl w-full max-w-md text-white">
     <h2 class="text-center text-2xl font-semibold mb-6">Registrar Fisioterapeuta</h2>
 
     <!-- Flash Messages -->
     {% with messages = get_flashed_messages(with_categories=true) %}
-      {% for category, message in messages %}
-        <p class="text-sm mb-2 {{ 'text-green-400' if category == 'success' else 'text-red-400' }}">{{ message }}</p>
-      {% endfor %}
+    {% for category, message in messages %}
+    <p class="text-sm mb-2 {{ 'text-green-400' if category == 'success' else 'text-red-400' }}">{{ message }}</p>
+    {% endfor %}
     {% endwith %}
 
     <label class="block mb-2">Email:</label>
@@ -31,7 +34,8 @@
     <input type="date" name="data_nasc" class="w-full p-3 mb-4 rounded bg-white/20" required>
 
     <label class="block mb-2">Telefone celular:</label>
-    <input type="tel" name="telefone" maxlength="11" class="w-full p-3 mb-4 rounded bg-white/20 placeholder-white" required>
+    <input type="tel" name="telefone" maxlength="11" class="w-full p-3 mb-4 rounded bg-white/20 placeholder-white"
+      required>
 
     <label class="block mb-2">Gênero:</label>
     <div class="flex gap-4 mb-4">
@@ -46,12 +50,15 @@
     <label class="block mb-2">Confirmar senha:</label>
     <input type="password" name="confirmar_senha" minlength="8" class="w-full p-3 mb-6 rounded bg-white/20" required>
 
-    <button type="submit" class="w-full bg-white text-black py-3 font-bold rounded hover:bg-gray-200 transition">Registrar</button>
+    <button type="submit"
+      class="w-full bg-white text-black py-3 font-bold rounded hover:bg-gray-200 transition">Registrar</button>
 
     <p class="text-xs mt-4 text-center">
-      Ao se registrar você estará concordando com nossos <a href="/terms" class="underline">termos</a> e <a href="/privacity" class="underline">política de privacidade</a>.
+      Ao se registrar você estará concordando com nossos <a href="/terms" class="underline">termos</a> e <a
+        href="/privacity" class="underline">política de privacidade</a>.
     </p>
     <p class="mt-2 text-center text-sm">Já tem conta? <a href="/login_fisio" class="underline">Faça login</a></p>
   </form>
 </body>
+
 </html>

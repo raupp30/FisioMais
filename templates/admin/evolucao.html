@@ -1,10 +1,8 @@
 {% extends 'admin/painel_fisio.html' %}
-
 <title>{% block title %}Evolução | Fisioterapeuta{% endblock %}</title>
 
 {% block content %}
 <div class="max-w-4xl mx-auto p-6 bg-white rounded-xl shadow">
-
   <h2 class="text-2xl font-bold text-gray-800 mb-6">
     📈 Evolução dos Pacientes após atendimento
   </h2>
@@ -14,10 +12,9 @@
     <label for="filtro" class="block text-gray-700 font-semibold mb-1">Buscar:</label>
     <div class="flex gap-2">
       <input type="text" name="filtro" id="filtro" value="{{ request.args.get('filtro', '') }}"
-             class="flex-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-             placeholder="Digite algo para buscar...">
-      <button type="submit"
-              class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg shadow transition">
+        class="flex-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+        placeholder="Digite algo para buscar...">
+      <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg shadow transition">
         Filtrar
       </button>
     </div>
@@ -25,21 +22,21 @@
 
   <!-- Lista de evoluções -->
   {% if evolucoes %}
-    {% for evo in evolucoes %}
-      <div class="border-l-4 border-blue-400 p-4 mb-4 bg-blue-50 rounded transition duration-300 hover:shadow-md">
-        <p><strong>Paciente:</strong> {{ evo.paciente_nome }}</p>
-        <p><strong>Data:</strong> {{ evo.data|datetimeformat }}</p>
-        <p><strong>Horário:</strong> {{ evo.horario }}</p>
-        <p><strong>Observações:</strong> {{ evo.observacoes }}</p>
-        <a href="{{ url_for('editar_obs_evolucao', agendamento_id=evo.id) }}"
-   class="inline-block mt-2 text-blue-600 hover:underline text-sm">
-   ✏️ Editar Observações
-</a>
+  {% for evo in evolucoes %}
+  <div class="border-l-4 border-blue-400 p-4 mb-4 bg-blue-50 rounded transition duration-300 hover:shadow-md">
+    <p><strong>Paciente:</strong> {{ evo.paciente_nome }}</p>
+    <p><strong>Data:</strong> {{ evo.data|datetimeformat }}</p>
+    <p><strong>Horário:</strong> {{ evo.horario }}</p>
+    <p><strong>Observações:</strong> {{ evo.observacoes }}</p>
+    <a href="{{ url_for('editar_obs_evolucao', agendamento_id=evo.id) }}"
+      class="inline-block mt-2 text-blue-600 hover:underline text-sm">
+      ✏️ Editar Observações
+    </a>
 
-      </div>
-    {% endfor %}
+  </div>
+  {% endfor %}
   {% else %}
-    <p class="text-gray-600">Nenhuma evolução registrada ainda.</p>
+  <p class="text-gray-600">Nenhuma evolução registrada ainda.</p>
   {% endif %}
 </div>
 {% endblock %}

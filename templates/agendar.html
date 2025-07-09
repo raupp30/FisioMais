@@ -1,5 +1,4 @@
 {% extends 'painel_paciente.html' %}
-
 {% block title %}Agendar | Paciente{% endblock %}
 
 {% block content %}
@@ -12,25 +11,25 @@
       <label for="fisioterapeuta" class="block text-gray-700 font-semibold mb-1">Selecione um fisioterapeuta:</label>
 
       {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-          {% for category, message in messages %}
-            <div class="mb-4 p-4 rounded-lg 
+      {% if messages %}
+      {% for category, message in messages %}
+      <div class="mb-4 p-4 rounded-lg 
                         {% if category == 'erro' %}
                           bg-red-100 text-red-800 border border-red-300
                         {% else %}
                           bg-blue-100 text-blue-800 border border-blue-300
                         {% endif %}">
-              {{ message }}
-            </div>
-          {% endfor %}
-        {% endif %}
+        {{ message }}
+      </div>
+      {% endfor %}
+      {% endif %}
       {% endwith %}
 
       <select id="fisioterapeuta" name="fisioterapeuta" required
-              class="w-full rounded-lg border border-gray-300 p-3 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-400">
+        class="w-full rounded-lg border border-gray-300 p-3 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-400">
         <option value="" disabled selected>-- Escolha um profissional --</option>
         {% for fisioterapeuta in fisioterapeutas %}
-          <option value="{{ fisioterapeuta.id }}">{{ fisioterapeuta.nome }}</option>
+        <option value="{{ fisioterapeuta.id }}">{{ fisioterapeuta.nome }}</option>
         {% endfor %}
       </select>
     </div>
@@ -38,24 +37,24 @@
     <!-- DATA -->
     <div>
       <label for="data-agendamento" class="block text-gray-700 font-semibold mb-1">Selecione a data:</label>
-      <input type="date" id="data-agendamento" name="data-agendamento"
-       min="{{ current_date }}" required onkeydown="return false"
-       class="w-full rounded-lg border border-gray-300 p-3 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-400"
-       oninput="validarData(this)">
+      <input type="date" id="data-agendamento" name="data-agendamento" min="{{ current_date }}" required
+        onkeydown="return false"
+        class="w-full rounded-lg border border-gray-300 p-3 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        oninput="validarData(this)">
     </div>
 
     <!-- HORÁRIO -->
     <div>
       <label for="horario" class="block text-gray-700 font-semibold mb-1">Selecione o horário:</label>
       <select id="horario" name="horario" required
-              class="w-full rounded-lg border border-gray-300 p-3 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-400">
+        class="w-full rounded-lg border border-gray-300 p-3 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-400">
         <option value="" disabled selected>-- Escolha um horário --</option>
       </select>
     </div>
 
     <!-- BOTÃO -->
     <button type="submit"
-            class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 rounded-lg transition-all duration-300">
+      class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 rounded-lg transition-all duration-300">
       Agendar
     </button>
 

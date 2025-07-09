@@ -1,26 +1,32 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Home</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="h-screen bg-cover bg-center bg-no-repeat flex items-center justify-center text-white" style="background-image: url('/static/img/fisio_app_home.jpg');">
+
+<body class="h-screen bg-cover bg-center bg-no-repeat flex items-center justify-center text-white"
+  style="background-image: url('/static/img/fisio_app_home.jpg');">
 
   <div class="flex gap-8 flex-col sm:flex-row text-center">
     <a href="{{ url_for('login_fisio') }}" class="transition transform hover:scale-105">
-      <div class="w-72 h-72 bg-black/70 border-4 border-black/80 rounded-2xl shadow-xl flex items-center justify-center">
+      <div
+        class="w-72 h-72 bg-black/70 border-4 border-black/80 rounded-2xl shadow-xl flex items-center justify-center">
         <h1 class="text-xl font-bold">Sou fisio</h1>
       </div>
     </a>
 
     <a href="{{ url_for('login_paciente') }}" class="transition transform hover:scale-105">
-      <div class="w-72 h-72 bg-black/70 border-4 border-black/80 rounded-2xl shadow-xl flex items-center justify-center">
+      <div
+        class="w-72 h-72 bg-black/70 border-4 border-black/80 rounded-2xl shadow-xl flex items-center justify-center">
         <h1 class="text-xl font-bold">Sou paciente</h1>
       </div>
     </a>
   </div>
 
 </body>
+
 </html>
