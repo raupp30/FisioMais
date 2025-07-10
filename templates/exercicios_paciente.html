@@ -1,13 +1,12 @@
 {% extends 'painel_paciente.html' %}
 {% block title %}Exercícios | Paciente{% endblock %}
 {% block content %}
-<div class="max-w-5xl mx-auto py-10 px-4 bg-gray-100 min-h-screen">
-  <h1 class="text-4xl font-bold text-center text-blue-800 mb-10">Exercícios</h1>
+<div class="max-w-4xl mx-auto py-10 px-4 bg-gray-100 min-h-screen">
+  <h1 class="text-2xl sm:text-4xl font-bold text-center text-black-800 mb-10">Exercícios</h1>
 
   {% set grupos = [
   {
   'nome': 'Pescoço',
-  'icone': '🦱',
   'cor': 'border-purple-500',
   'exercicios': [
   {'titulo': 'Inclinação lateral do pescoço', 'passos': [
@@ -24,7 +23,6 @@
   },
   {
   'nome': 'Ombros',
-  'icone': '🦻',
   'cor': 'border-yellow-500',
   'exercicios': [
   {'titulo': 'Elevação de ombros', 'passos': [
@@ -38,7 +36,6 @@
   },
   {
   'nome': 'Coluna',
-  'icone': '🦵',
   'cor': 'border-green-500',
   'exercicios': [
   {'titulo': 'Extensão lombar', 'passos': [
@@ -52,7 +49,6 @@
   },
   {
   'nome': 'Quadril',
-  'icone': '🏋️',
   'cor': 'border-pink-500',
   'exercicios': [
   {'titulo': 'Ponte', 'passos': [
@@ -66,7 +62,6 @@
   },
   {
   'nome': 'Joelhos',
-  'icone': '🧼',
   'cor': 'border-blue-500',
   'exercicios': [
   {'titulo': 'Extensão de joelho sentado', 'passos': [
@@ -80,7 +75,6 @@
   },
   {
   'nome': 'Tornozelos',
-  'icone': '🧼',
   'cor': 'border-indigo-500',
   'exercicios': [
   {'titulo': 'Flexão plantar', 'passos': [
@@ -93,7 +87,6 @@
   },
   {
   'nome': 'Membros Superiores',
-  'icone': '💪',
   'cor': 'border-orange-500',
   'exercicios': [
   {'titulo': 'Flexão de cotovelo', 'passos': [
@@ -106,7 +99,6 @@
   },
   {
   'nome': 'Membros Inferiores',
-  'icone': '🧼',
   'cor': 'border-red-500',
   'exercicios': [
   {'titulo': 'Elevação de perna reta', 'passos': [
@@ -119,7 +111,6 @@
   },
   {
   'nome': 'Respiração / Mobilidade torácica',
-  'icone': '🌬️',
   'cor': 'border-teal-500',
   'exercicios': [
   {'titulo': 'Respiração diafragmática', 'passos': [
@@ -134,7 +125,6 @@
   },
   {
   'nome': 'Equilíbrio e Coordenação',
-  'icone': '📏',
   'cor': 'border-cyan-500',
   'exercicios': [
   {'titulo': 'Equilíbrio unipodal', 'passos': [
@@ -151,21 +141,21 @@
   {% for grupo in grupos %}
   <div class="mb-6">
     <button onclick="toggleGrupo('{{ grupo.nome | replace(' ', '_') }}')"
-      class="w-full text-left bg-white border-l-4 {{ grupo.cor }} border p-4 rounded-lg shadow hover:bg-gray-50 text-xl font-semibold text-gray-800 transition">
+      class="w-full text-left bg-white border-l-4 {{ grupo.cor }} border p-4 rounded-lg shadow hover:bg-gray-50 text-xl sm:text-2xl font-semibold text-gray-800 transition">
       {{ grupo.icone }} {{ grupo.nome }}
     </button>
 
     <div id="{{ grupo.nome | replace(' ', '_') }}" class="hidden mt-2 pl-4">
       {% for ex in grupo.exercicios %}
       <div class="mb-4">
-        <button class="w-full text-left bg-white border border-gray-300 p-3 rounded shadow hover:bg-blue-50"
+        <button class="w-full text-left bg-white border border-gray-300 p-3 rounded shadow hover:bg-blue-50 text-base sm:text-lg"
           onclick="toggleExercicio('{{ ex.titulo | replace(' ', '_') }}')">
           {{ ex.titulo }}
         </button>
         <div id="{{ ex.titulo | replace(' ', '_') }}"
-          class="hidden mt-2 bg-white p-4 border-l-4 {{ grupo.cor }} rounded shadow text-gray-700">
+          class="hidden mt-2 bg-white p-4 border-l-4 {{ grupo.cor }} rounded shadow text-gray-700 text-sm sm:text-base">
           <p><strong>Como fazer:</strong></p>
-          <ul class="list-disc pl-6 mt-2">
+          <ul class="list-disc pl-6 mt-2 space-y-1">
             {% for passo in ex.passos %}
             <li>{{ passo }}</li>
             {% endfor %}

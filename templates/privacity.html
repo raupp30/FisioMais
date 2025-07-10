@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
   <meta charset="UTF-8" />
-  <title>Política de privacidade | FisioMais</title>
+  <title>Política de Privacidade | FisioMais</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet" />
   <style>
     body {
       font-family: 'Poppins', sans-serif;
@@ -14,38 +13,41 @@
   </style>
 </head>
 
-<body class="min-h-screen flex items-center justify-center bg-black">
+<body class="min-h-screen bg-gray-900 text-gray-200 flex items-center justify-center p-4">
 
-  <form method="POST" class="bg-white/10 backdrop-blur-md p-10 rounded-xl shadow-xl w-full max-w-3xl text-white">
-    <h2 class="text-2xl font-semibold text-center mb-6">Política de Privacidade</h2>
+  <div class="bg-white/10 backdrop-blur-xl p-8 sm:p-10 rounded-2xl shadow-2xl max-w-3xl w-full">
+    <h2 class="text-3xl font-bold text-center text-gray-100 mb-6">🔒 Política de Privacidade</h2>
 
-    <p class="text-sm leading-relaxed text-justify">
-      A <strong>FisioMais</strong>, criada em 2025, se compromete a proteger a privacidade de seus usuários e a tratar
-      seus dados pessoais com responsabilidade e segurança.
-      Ao utilizar nosso site, coletamos informações como nome, e-mail, telefone, dados de login e, quando necessário,
-      dados de saúde com o consentimento do usuário,
-      com o objetivo de oferecer serviços como agendamento de consultas, acompanhamento fisioterapêutico e comunicação
-      entre pacientes e profissionais.
-      Também coletamos dados técnicos, como IP e cookies, para melhorar a experiência de navegação. Os dados não são
-      vendidos nem compartilhados com terceiros
-      para fins comerciais, sendo utilizados apenas por profissionais autorizados ou parceiros operacionais, quando
-      necessário. Armazenamos as informações
-      de forma segura, seguindo as exigências da Lei Geral de Proteção de Dados (LGPD). Os usuários têm o direito de
-      acessar, corrigir ou excluir seus dados,
-      além de revogar o consentimento a qualquer momento. A FisioMais pode atualizar esta política periodicamente, e
-      recomenda que o usuário a consulte com frequência
-      para estar ciente de possíveis mudanças. Em caso de dúvidas, estamos disponíveis pelo e-mail
-      <a href="mailto:privacidade@fisiomais.com.br" class="underline text-blue-300">privacidade@fisiomais.com.br</a>.
-    </p>
+    <div class="max-h-[400px] overflow-y-auto pr-2">
+      <p class="text-sm leading-relaxed text-justify space-y-4">
+        A <strong class="text-gray-100">FisioMais</strong>, criada em 2025, se compromete a proteger a privacidade de seus usuários e a tratar
+        seus dados pessoais com responsabilidade e segurança.
 
-    <div class="text-center mt-4">
-      <p>
-        Clique <a href="{{ url_for('home') }}" class="text-red-500 font-semibold underline">aqui</a> para voltar para
-        home page.
+        <br><br>
+        Ao utilizar nosso site, coletamos informações como nome, e-mail, telefone, dados de login e, quando necessário,
+        dados de saúde com o consentimento do usuário, com o objetivo de oferecer serviços como agendamento de consultas, acompanhamento fisioterapêutico e comunicação entre pacientes e profissionais.
+
+        <br><br>
+        Também coletamos dados técnicos, como IP e cookies, para melhorar a experiência de navegação. Os dados não são
+        vendidos nem compartilhados com terceiros para fins comerciais, sendo utilizados apenas por profissionais autorizados ou parceiros operacionais, quando necessário.
+
+        <br><br>
+        Armazenamos as informações de forma segura, seguindo as exigências da Lei Geral de Proteção de Dados (LGPD). Os usuários têm o direito de acessar, corrigir ou excluir seus dados, além de revogar o consentimento a qualquer momento.
+
+        <br><br>
+        A FisioMais pode atualizar esta política periodicamente, e recomenda que o usuário a consulte com frequência
+        para estar ciente de possíveis mudanças. Em caso de dúvidas, estamos disponíveis pelo e-mail:
+        <a href="mailto:privacidade@fisiomais.com.br" class="underline text-gray-300 hover:text-gray-400">privacidade@fisiomais.com.br</a>.
       </p>
     </div>
-  </form>
+
+    <div class="text-center mt-6">
+      <a href="{{ url_for('home') }}"
+         class="inline-block mt-2 px-6 py-2 bg-gray-600 hover:bg-gray-700 text-gray-100 font-semibold rounded-lg transition duration-200">
+        ← Voltar para a Home
+      </a>
+    </div>
+  </div>
 
 </body>
-
 </html>

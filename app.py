@@ -1,6 +1,7 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify, json
+from flask import Flask, render_template, request, current_app, redirect, url_for, session, flash, jsonify, json
 import pyrebase, firebase_admin
 from firebase_admin import credentials, auth, db
+import firebase_admin.auth as pb_auth
 from werkzeug.security import generate_password_hash
 import os
 import sys
@@ -8,7 +9,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), 'utils'))
 from datetime import datetime
 from functools import wraps
 from flask import make_response
-import requests
+from requests.exceptions import HTTPError
 from utils.email_service import enviar_email_redefinicao
 from dotenv import load_dotenv
 load_dotenv()
@@ -39,25 +40,9 @@ config = {
 }
 
 API_KEY = config['apiKey']
-
-def no_cache(view):
-    @wraps(view)
-    def no_cache_wrapper(*args, **kwargs):
-        response = make_response(view(*args, **kwargs))
-        response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
-        response.headers["Pragma"] = "no-cache"
-        response.headers["Expires"] = "0"
-        return response
-    return no_cache_wrapper
-
-
 firebase = pyrebase.initialize_app(config)
 pb_auth = firebase.auth()
 pb_db = firebase.database()
-
-@app.route('/')
-def home():
-    return render_template('home.html')
 
 def login_required(f):
     @wraps(f)
@@ -88,6 +73,20 @@ def tipo_usuario_required(tipo_esperado):
         return decorated_function
     return decorator
 
+def no_cache(view):
+    @wraps(view)
+    def no_cache_wrapper(*args, **kwargs):
+        response = make_response(view(*args, **kwargs))
+        response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+        response.headers["Pragma"] = "no-cache"
+        response.headers["Expires"] = "0"
+        return response
+    return no_cache_wrapper
+
+@app.route('/')
+def home():
+    return render_template('home.html') 
+
 @app.route('/terms')
 def terms():
     return render_template('terms.html')
@@ -97,9 +96,8 @@ def privacity():
     return render_template('privacity.html')
 
 @app.route('/admin/painel_fisio')
-@login_required
-@tipo_usuario_required('fisioterapeuta')
 @no_cache
+@login_required
 def painel_fisio():
     return render_template('admin/painel_fisio.html')
 
@@ -305,8 +303,8 @@ def register_fisio():
 
             db.reference(f'usuarios/{uid}').set(dados_fisio)
 
-            flash("Fisioterapeuta registrado com sucesso!", "success")
-            return redirect('/register_fisio')
+            flash("Fisioterapeuta registrado com sucesso! Realize o login!", "success")
+            return redirect('/login_fisio')
 
         except Exception as e:
             flash(f"Erro ao se registrar: {e}", "error")
@@ -333,13 +331,6 @@ def login_fisio():
             flash(f"Credenciais inválidas !", "danger")
 
     return render_template("/login_fisio.html")
-
-def verificar_email_existente(email):
-    try:
-        user = auth.get_user_by_email(email)
-        return True  # email em uso
-    except auth.UserNotFoundError:
-        return False  # email disp
 
 @app.route('/admin/config_fisio', methods=['GET', 'POST'])
 @login_required
@@ -412,8 +403,8 @@ def register_paciente():
                 'tipo': 'paciente'
             })
 
-            flash("Paciente registrado com sucesso!", "success")
-            return redirect('register_paciente')
+            flash("Fisioterapeuta registrado com sucesso! Realize o login!", "success")
+            return redirect('login_paciente')
 
         except Exception as e:
             flash(f"Erro ao registrar no Firebase: {e}", "error")
@@ -545,11 +536,10 @@ def config_paciente():
 
 @app.route('/logout')
 @login_required
-@no_cache
 def logout():
     session.clear()
     flash("Logout realizado com sucesso!", "success")
-    return redirect('/')
+    return redirect(url_for('home'))
 
 @app.route('/horarios_disponiveis')
 @login_required

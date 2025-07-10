@@ -5,40 +5,29 @@
   <meta charset="UTF-8">
   <script src="https://cdn.tailwindcss.com"></script>
   <title>{% block title %}Menu | Fisioterapeuta{% endblock %}</title>
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-  <meta http-equiv="Pragma" content="no-cache" />
-  <meta http-equiv="Expires" content="0" />
-  <script>
-    window.onload = function () {
-      if (performance.navigation.type === 2) {
-        window.location.reload(true);
-      }
-    };
-  </script>
 </head>
 
 <body class="flex min-h-screen bg-gray-100 font-sans">
 
-  <aside class="w-64 bg-amber-400 text-white flex flex-col fixed top-0 left-0 h-full shadow-lg">
+  <aside class="justify-center text-white bg-gradient-to-br from-cyan-800 via-blue-950 to-black p-3">
     <div class="flex items-center justify-center py-6">
       <img src="{{ url_for('static', filename='img/fisiomais.png') }}" alt="Logo FisioMais+" class="max-w-[180px]">
     </div>
     <nav class="flex flex-col space-y-1 px-4">
       <a href="{{ url_for('painel_fisio') }}"
-        class="flex items-center gap-2 px-4 py-3 rounded hover:bg-amber-500 transition">
+        class="flex items-center gap-2 px-4 py-3 rounded hover:bg-teal-400 transition">
         🏠 <span>Menu Fisio</span>
-        <p>Usuário: {{ session.get('user_id') }}</p>
       </a>
       <a href="{{ url_for('meus_agendamentos_fisio') }}"
-        class="flex items-center gap-2 px-4 py-3 rounded hover:bg-amber-500 transition">
+        class="flex items-center gap-2 px-4 py-3 rounded hover:bg-teal-400 transition">
         📅 <span>Agendamentos</span>
       </a>
       <a href="{{ url_for('evolucao') }}"
-        class="flex items-center gap-2 px-4 py-3 rounded hover:bg-amber-500 transition">
+        class="flex items-center gap-2 px-4 py-3 rounded hover:bg-teal-400 transition">
         📈 <span>Evolução</span>
       </a>
       <a href="{{ url_for('config_fisio') }}"
-        class="flex items-center gap-2 px-4 py-3 rounded hover:bg-amber-500 transition">
+        class="flex items-center gap-2 px-4 py-3 rounded hover:bg-teal-400 transition">
         ⚙️ <span>Meus Dados</span>
       </a>
       <a href="{{ url_for('home') }}"
@@ -53,19 +42,19 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
       <a href="{{ url_for('meus_agendamentos_fisio') }}"
-        class="bg-white rounded-xl shadow p-6 hover:shadow-lg transition cursor-pointer">
+        class="bg-white rounded-xl shadow p-6 hover:bg-teal-50 transition">
         <h2 class="text-xl font-semibold text-gray-800 mb-2">📅 Agendamentos</h2>
         <p class="text-sm text-gray-600">Gerencie e visualize seus horários com os pacientes.</p>
       </a>
 
       <a href="{{ url_for('evolucao') }}"
-        class="bg-white rounded-xl shadow p-6 hover:shadow-lg transition cursor-pointer">
+        class="bg-white rounded-xl shadow p-6 hover:bg-teal-50 transition">
         <h2 class="text-xl font-semibold text-gray-800 mb-2">📈 Evolução</h2>
         <p class="text-sm text-gray-600">Registre a evolução e progresso dos seus pacientes.</p>
       </a>
 
       <a href="{{ url_for('config_fisio') }}"
-        class="bg-white rounded-xl shadow p-6 hover:shadow-lg transition cursor-pointer">
+        class="bg-white rounded-xl shadow p-6 hover:bg-teal-50 transition">
         <h2 class="text-xl font-semibold text-gray-800 mb-2">⚙️ Meus Dados</h2>
         <p class="text-sm text-gray-600">Atualize seu perfil e informações de contato.</p>
       </a>

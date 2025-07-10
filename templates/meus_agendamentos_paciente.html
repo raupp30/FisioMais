@@ -2,49 +2,50 @@
 {% block title %}Meus agendamentos | Paciente{% endblock %}
 
 {% block content %}
-<div class="max-w-5xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
+<div class="max-w-5xl mx-auto mt-10 p-4 bg-white rounded-lg shadow-md overflow-hidden">
   <h1 class="text-2xl font-bold text-center text-gray-800 mb-6">Meus Agendamentos</h1>
 
   {% with messages = get_flashed_messages(with_categories=true) %}
   {% if messages %}
-  <div class="mb-6 space-y-3">
-    {% for category, message in messages %}
-    <div class="px-4 py-3 rounded text-white shadow 
-                      {% if category == 'success' %} bg-green-500 
-                      {% elif category == 'error' %} bg-red-500 
-                      {% else %} bg-blue-500 
-                      {% endif %}">
-      {{ message }}
+  <div class="mb-6">
+  {% for category, message in messages %}
+    <div class="p-4 rounded-lg border 
+                {% if category == 'success' %} bg-green-300 border-green-500 text-white text-center
+                {% elif category == 'error' %} bg-red-300 border-red-500 text-white text-center
+                {% else %} bg-green-300 border-green-500 text-white text-center
+                {% endif %}">
+      <p>🔔 {{ message }}</p>
     </div>
-    {% endfor %}
-  </div>
+  {% endfor %}
+</div>
+
   {% endif %}
   {% endwith %}
 
   {% if agendamentos %}
   <div class="overflow-x-auto">
-    <table class="min-w-full divide-y divide-gray-200">
+    <table class="w-full min-w-[600px] text-sm table-auto">
       <thead class="bg-gray-100">
         <tr>
-          <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase">Data</th>
-          <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase">Horário</th>
-          <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase">Fisioterapeuta</th>
-          <th class="px-6 py-3 text-center text-sm font-semibold text-gray-600 uppercase">Ações</th>
+          <th class="px-3 py-2 text-left font-semibold text-gray-600 uppercase">Data</th>
+          <th class="px-3 py-2 text-left font-semibold text-gray-600 uppercase">Horário</th>
+          <th class="px-3 py-2 text-left font-semibold text-gray-600 uppercase">Fisioterapeuta</th>
+          <th class="px-3 py-2 text-center font-semibold text-gray-600 uppercase">Ações</th>
         </tr>
       </thead>
       <tbody class="bg-white divide-y divide-gray-200">
         {% for ag in agendamentos %}
         <tr>
-          <td class="px-6 py-4 text-gray-700">{{ ag.data | datetimeformat }}</td>
-          <td class="px-6 py-4 text-gray-700">{{ ag.horario }}</td>
-          <td class="px-6 py-4 text-gray-700">{{ ag.fisioterapeuta_nome }}</td>
-          <td class="px-6 py-4 text-center space-x-2">
+          <td class="px-3 py-2 text-gray-700 whitespace-nowrap">{{ ag.data | datetimeformat }}</td>
+          <td class="px-3 py-2 text-gray-700 whitespace-nowrap">{{ ag.horario }}</td>
+          <td class="px-3 py-2 text-gray-700 whitespace-nowrap">{{ ag.fisioterapeuta_nome }}</td>
+          <td class="px-3 py-2 text-center space-x-1">
             <a href="{{ url_for('editar_agendamento', id=ag.id) }}"
-              class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-semibold py-1 px-3 rounded">
+              class="inline-block bg-blue-500 hover:bg-blue-600 text-white text-xs font-semibold py-1 px-2 rounded">
               Editar
             </a>
             <a href="{{ url_for('excluir_agendamento', id=ag.id) }}"
-              class="inline-block bg-red-500 hover:bg-red-600 text-white font-semibold py-1 px-3 rounded"
+              class="inline-block bg-red-500 hover:bg-red-600 text-white text-xs font-semibold py-1 px-2 rounded"
               onclick="return confirm('Tem certeza que deseja excluir este agendamento?')">
               Excluir
             </a>

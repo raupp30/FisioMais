@@ -3,7 +3,7 @@
 
 {% block content %}
 <div class="max-w-4xl mx-auto p-6 bg-white rounded-xl shadow">
-  <h2 class="text-2xl font-bold text-gray-800 mb-6">
+  <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">
     📈 Evolução dos Pacientes após atendimento
   </h2>
 
@@ -14,7 +14,7 @@
       <input type="text" name="filtro" id="filtro" value="{{ request.args.get('filtro', '') }}"
         class="flex-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
         placeholder="Digite algo para buscar...">
-      <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg shadow transition">
+      <button type="submit" class="bg-teal-500 hover:bg-teal-400 text-white px-4 py-2 rounded-lg shadow transition">
         Filtrar
       </button>
     </div>
@@ -23,13 +23,13 @@
   <!-- Lista de evoluções -->
   {% if evolucoes %}
   {% for evo in evolucoes %}
-  <div class="border-l-4 border-blue-400 p-4 mb-4 bg-blue-50 rounded transition duration-300 hover:shadow-md">
+  <div class="border-l-4 border-teal-500 p-4 mb-4 bg-teal-50 rounded transition duration-300 hover:shadow-md">
     <p><strong>Paciente:</strong> {{ evo.paciente_nome }}</p>
     <p><strong>Data:</strong> {{ evo.data|datetimeformat }}</p>
     <p><strong>Horário:</strong> {{ evo.horario }}</p>
     <p><strong>Observações:</strong> {{ evo.observacoes }}</p>
     <a href="{{ url_for('editar_obs_evolucao', agendamento_id=evo.id) }}"
-      class="inline-block mt-2 text-blue-600 hover:underline text-sm">
+      class="inline-block mt-2 text-teal-500 hover:underline text-sm">
       ✏️ Editar Observações
     </a>
 
