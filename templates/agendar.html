@@ -2,71 +2,69 @@
 {% block title %}Agendar | Paciente{% endblock %}
 
 {% block content %}
- <div class="max-w-xl mx-auto mt-10 bg-white shadow-lg rounded-2xl p-6 md:p-8">
-        <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">📅 Agendar Consulta</h1>
-        <form method="POST" action="{{ url_for('agendar') }}" class="space-y-5">
-          <!-- resto do form inalterado... -->
-          <div>
-            <label for="fisioterapeuta" class="block text-gray-700 font-semibold mb-1">Selecione um fisioterapeuta:</label>
-            {% with messages = get_flashed_messages(with_categories=true) %}
-              {% if messages %}
-                {% for category, message in messages %}
-                  <div class="mb-4 p-3 rounded-lg
+<div class="max-w-xl mx-auto mt-10 bg-white shadow-lg rounded-2xl p-6 md:p-8">
+  <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">📅 Agendar Consulta</h1>
+  <form method="POST" action="{{ url_for('agendar') }}" class="space-y-5">
+    <div>
+      <label for="fisioterapeuta" class="block text-gray-700 font-semibold mb-1">Selecione um fisioterapeuta:</label>
+      {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+      {% for category, message in messages %}
+      <div class="mb-4 p-3 rounded-lg
                     {% if category == 'erro' %}
                       p-4 rounded-lg font-semibold border border-gray-500 bg-gray-300 text-black text-center space-y-1
                     {% else %}
                       p-4 rounded-lg font-semibold border border-gray-500 bg-gray-300 text-black text-center space-y-1
                     {% endif %}">
-                    {{ message }}
-                    <!-- Flash messages -->
-    {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-    <div class="p-4 rounded-lg font-semibold border border-gray-500 bg-gray-300 text-black text-center space-y-1">
-      {% for category, message in messages %}
-      <p>🔔 {{ message }}</p>
-      {% endfor %}
-    </div>
-    {% endif %}
-    {% endwith %}
-                  </div>
-                {% endfor %}
-              {% endif %}
-            {% endwith %}
-            <select id="fisioterapeuta" name="fisioterapeuta" required class="w-full rounded-lg border-gray-300 p-3 bg-gray-50 focus:ring-2 focus:ring-blue-400 focus:outline-none">
-              <option value="" disabled selected>-- Escolha um profissional --</option>
-              {% for fisioterapeuta in fisioterapeutas %}
-                <option value="{{ fisioterapeuta.id }}">{{ fisioterapeuta.nome }}</option>
-              {% endfor %}
-            </select>
-          </div>
-
-          <!-- Inputs de data e horário -->
-          <div>
-            <label for="data-agendamento" class="block text-gray-700 font-semibold mb-1">Selecione a data:</label>
-            <input type="date" id="data-agendamento" name="data-agendamento" min="{{ current_date }}" required
-                   onkeydown="return false" oninput="validarData(this)"
-                   class="w-full rounded-lg border-gray-300 p-3 bg-gray-50 focus:ring-2 focus:ring-blue-400 focus:outline-none">
-          </div>
-
-          <div>
-            <label for="horario" class="block text-gray-700 font-semibold mb-1">Selecione o horário:</label>
-            <select id="horario" name="horario" required class="w-full rounded-lg border-gray-300 p-3 bg-gray-50 focus:ring-2 focus:ring-blue-400 focus:outline-none">
-              <option value="" disabled selected>-- Escolha um horário --</option>
-            </select>
-          </div>
-
-          <!-- Botão e link -->
-          <button type="submit" class="w-full bg-green-500 hover:bg-green-400 text-white font-bold py-3 rounded-lg transition duration-300">
-            Agendar
-          </button>
-          <p class="text-center text-sm text-gray-600">
-            Já tem um agendamento?
-            <a href="{{ url_for('meus_agendamentos_paciente') }}" class="text-blue-500 hover:underline font-medium">Ver meus agendamentos</a>
-          </p>
-        </form>
+        {{ message }}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="p-4 rounded-lg font-semibold border border-gray-500 bg-gray-300 text-black text-center space-y-1">
+          {% for category, message in messages %}
+          <p>🔔 {{ message }}</p>
+          {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
       </div>
+      {% endfor %}
+      {% endif %}
+      {% endwith %}
+      <select id="fisioterapeuta" name="fisioterapeuta" required
+        class="w-full rounded-lg border-gray-300 p-3 bg-gray-50 focus:ring-2 focus:ring-blue-400 focus:outline-none">
+        <option value="" disabled selected>-- Escolha um profissional --</option>
+        {% for fisioterapeuta in fisioterapeutas %}
+        <option value="{{ fisioterapeuta.id }}">{{ fisioterapeuta.nome }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <label for="data-agendamento" class="block text-gray-700 font-semibold mb-1">Selecione a data:</label>
+      <input type="date" id="data-agendamento" name="data-agendamento" min="{{ current_date }}" required
+        onkeydown="return false" oninput="validarData(this)"
+        class="w-full rounded-lg border-gray-300 p-3 bg-gray-50 focus:ring-2 focus:ring-blue-400 focus:outline-none">
+    </div>
 
-<!-- SCRIPT DINÂMICO -->
+    <div>
+      <label for="horario" class="block text-gray-700 font-semibold mb-1">Selecione o horário:</label>
+      <select id="horario" name="horario" required
+        class="w-full rounded-lg border-gray-300 p-3 bg-gray-50 focus:ring-2 focus:ring-blue-400 focus:outline-none">
+        <option value="" disabled selected>-- Escolha um horário --</option>
+      </select>
+    </div>
+
+    <button type="submit"
+      class="w-full bg-green-500 hover:bg-green-400 text-white font-bold py-3 rounded-lg transition duration-300">
+      Agendar
+    </button>
+    <p class="text-center text-sm text-gray-600">
+      Já tem um agendamento?
+      <a href="{{ url_for('meus_agendamentos_paciente') }}" class="text-blue-500 hover:underline font-medium">Ver meus
+        agendamentos</a>
+    </p>
+  </form>
+</div>
+
 <script>
   document.getElementById('data-agendamento').addEventListener('change', carregarHorarios);
   document.getElementById('fisioterapeuta').addEventListener('change', carregarHorarios);
@@ -101,7 +99,7 @@
 
   function validarData(input) {
     const data = new Date(input.value);
-    const dia = data.getDay(); // 0=Domingo, 6=Sábado
+    const dia = data.getDay();
     if (dia === 0 || dia === 6) {
       alert('⛔ Apenas dias úteis (segunda a sexta) são permitidos.');
       input.value = '';

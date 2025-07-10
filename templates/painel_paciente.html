@@ -16,46 +16,42 @@
 
 <body class="flex min-h-screen bg-gray-100">
 
-  <!-- Sidebar -->
-<aside class="justify-center bg-gradient-to-br from-green-800 via-green-900 to-black p-3">
-  <div class="p-4 text-center">
-    <img src="{{ url_for('static', filename='img/fisiomais.png') }}" alt="FisioMais+ Logo"
-         class="mx-auto max-w-[180px]">
-  </div>
+  <aside class="justify-center bg-gradient-to-br from-green-800 via-green-900 to-black p-3">
+    <div class="p-4 text-center">
+      <img src="{{ url_for('static', filename='img/fisiomais.png') }}" alt="FisioMais+ Logo"
+        class="mx-auto max-w-[180px]">
+    </div>
 
-  <nav class="flex flex-col space-y-1 px-4 text-white font-medium">
-    <a href="{{ url_for('painel_paciente') }}"
-       class="flex items-center gap-2 px-4 py-3 rounded hover:bg-green-400 transition">
-      🏠 <span>Menu Paciente</span>
-    </a>
-    <a href="{{ url_for('agendar') }}"
-       class="flex items-center gap-2 px-4 py-3 rounded hover:bg-green-400 transition">
-      📅 <span>Agendamentos</span>
-    </a>
-    <a href="{{ url_for('evolucao_paciente') }}"
-       class="flex items-center gap-2 px-4 py-3 rounded hover:bg-green-400 transition">
-      📈 <span>Evolução</span>
-    </a>
-    <a href="{{ url_for('exercicios_paciente') }}"
-       class="flex items-center gap-2 px-4 py-3 rounded hover:bg-green-400 transition">
-      🏋🏽 <span>Exercícios</span>
-    </a>
-    <a href="{{ url_for('config_paciente') }}"
-       class="flex items-center gap-2 px-4 py-3 rounded hover:bg-green-400 transition">
-      ⚙️ <span>Meus Dados</span>
-    </a>
-    <a href="{{ url_for('home') }}"
-       class="flex items-center gap-2 px-4 py-3 mt-4 text-red-100 hover:text-white hover:bg-red-500 rounded transition">
-      🚪 <span>Sair</span>
-    </a>
-  </nav>
-</aside>
+    <nav class="flex flex-col space-y-1 px-4 text-white font-medium">
+      <a href="{{ url_for('painel_paciente') }}"
+        class="flex items-center gap-2 px-4 py-3 rounded hover:bg-green-400 transition">
+        🏠 <span>Menu Paciente</span>
+      </a>
+      <a href="{{ url_for('agendar') }}"
+        class="flex items-center gap-2 px-4 py-3 rounded hover:bg-green-400 transition">
+        📅 <span>Agendamentos</span>
+      </a>
+      <a href="{{ url_for('evolucao_paciente') }}"
+        class="flex items-center gap-2 px-4 py-3 rounded hover:bg-green-400 transition">
+        📈 <span>Evolução</span>
+      </a>
+      <a href="{{ url_for('exercicios_paciente') }}"
+        class="flex items-center gap-2 px-4 py-3 rounded hover:bg-green-400 transition">
+        🏋🏽 <span>Exercícios</span>
+      </a>
+      <a href="{{ url_for('config_paciente') }}"
+        class="flex items-center gap-2 px-4 py-3 rounded hover:bg-green-400 transition">
+        ⚙️ <span>Meus Dados</span>
+      </a>
+      <a href="{{ url_for('home') }}"
+        class="flex items-center gap-2 px-4 py-3 mt-4 text-red-100 hover:text-white hover:bg-red-500 rounded transition">
+        🚪 <span>Sair</span>
+      </a>
+    </nav>
+  </aside>
 
-
-  <!-- Conteúdo principal -->
   <main class="w-full p-10">
     {% block content %}
-    <!-- Conteúdo padrão (caso não sobrescreva) -->
     <div class="max-w-5xl mx-auto py-12 px-6">
       <h1 class="text-3xl font-bold text-center text-gray-800 mb-10">Olá! O que você deseja fazer?</h1>
 
@@ -91,7 +87,6 @@
     </div>
     {% endblock %}
   </main>
-
 </body>
 
 </html>

@@ -9,14 +9,13 @@
     <div>
       <label for="observacoes" class="block text-sm font-medium text-gray-700">Observações:</label>
       <textarea name="observacoes" id="observacoes" rows="6"
-                class="w-full border border-gray-300 rounded-lg p-3 focus:ring-blue-500 focus:outline-none">{{ agendamento.observacoes }}</textarea>
+        class="w-full border border-gray-300 rounded-lg p-3 focus:ring-blue-500 focus:outline-none">{{ agendamento.observacoes }}</textarea>
     </div>
 
     <div class="flex justify-end gap-2">
       <a href="{{ url_for('evolucao') }}"
-         class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-lg shadow">Cancelar</a>
-      <button type="submit"
-              class="bg-teal-500 hover:bg-teal-400 text-white px-4 py-2 rounded-lg shadow">Salvar</button>
+        class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-lg shadow">Cancelar</a>
+      <button type="submit" class="bg-teal-500 hover:bg-teal-400 text-white px-4 py-2 rounded-lg shadow">Salvar</button>
     </div>
   </form>
 </div>

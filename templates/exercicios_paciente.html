@@ -148,7 +148,8 @@
     <div id="{{ grupo.nome | replace(' ', '_') }}" class="hidden mt-2 pl-4">
       {% for ex in grupo.exercicios %}
       <div class="mb-4">
-        <button class="w-full text-left bg-white border border-gray-300 p-3 rounded shadow hover:bg-blue-50 text-base sm:text-lg"
+        <button
+          class="w-full text-left bg-white border border-gray-300 p-3 rounded shadow hover:bg-blue-50 text-base sm:text-lg"
           onclick="toggleExercicio('{{ ex.titulo | replace(' ', '_') }}')">
           {{ ex.titulo }}
         </button>

@@ -4,29 +4,50 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Home</title>
+  <title>FisioMais+ | Início</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+    }
+  </style>
 </head>
 
-<body class="h-screen bg-cover bg-center bg-no-repeat flex items-center justify-center text-white"
+<body class="h-screen bg-cover bg-center bg-no-repeat text-white relative"
   style="background-image: url('/static/img/fisio_app_home.jpg');">
 
-  <div class="flex gap-8 flex-col sm:flex-row text-center">
-    <a href="{{ url_for('login_fisio') }}" class="transition transform hover:scale-105">
-      <div
-        class="w-72 h-72 bg-black/70 border-4 border-black/80 rounded-2xl shadow-xl flex items-center justify-center">
-        <h1 class="text-xl font-bold">Sou fisio</h1>
-      </div>
-    </a>
+  <div class="absolute inset-0 bg-gradient-to-b from-black/80 via-black/30 to-black/90 z-0"></div>
+  <div class="relative z-10 flex flex-col items-center justify-center h-full px-4 text-center space-y-10">
 
-    <a href="{{ url_for('login_paciente') }}" class="transition transform hover:scale-105">
-      <div
-        class="w-72 h-72 bg-black/70 border-4 border-black/80 rounded-2xl shadow-xl flex items-center justify-center">
-        <h1 class="text-xl font-bold">Sou paciente</h1>
-      </div>
-    </a>
+    <div>
+      <h1 class="text-4xl sm:text-5xl font-bold drop-shadow-xl">Bem-vindo ao <span
+          class="text-green-400">FisioMais+</span></h1>
+      <p class="mt-2 text-lg sm:text-xl text-gray-200 drop-shadow-sm">Escolha como deseja acessar</p>
+    </div>
+
+    <div class="flex flex-col sm:flex-row gap-6">
+      <a href="{{ url_for('login_fisio') }}"
+        class="w-64 h-64 bg-white/10 backdrop-blur-md transition-all duration-300 rounded-2xl shadow-xl flex flex-col justify-center items-center gap-4 border border-white/20 hover:scale-105 hover:bg-gradient-to-br hover:from-cyan-900 hover:via-blue-950 hover:to-black">
+        <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M12 11c1.657 0 3-1.567 3-3.5S13.657 4 12 4s-3 1.567-3 3.5 1.343 3.5 3 3.5z" />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 20h14M5 20v-1a4 4 0 014-4h6a4 4 0 014 4v1" />
+        </svg>
+        <span class="text-xl font-semibold">Sou Fisioterapeuta</span>
+      </a>
+
+      <a href="{{ url_for('login_paciente') }}"
+        class="w-64 h-64 bg-white/10 backdrop-blur-md transition-all duration-300 rounded-2xl shadow-xl flex flex-col justify-center items-center gap-4 border border-white/20 hover:scale-105 hover:bg-gradient-to-br hover:from-green-800 hover:via-green-900 hover:to-black">
+        <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M12 11c1.657 0 3-1.567 3-3.5S13.657 4 12 4s-3 1.567-3 3.5 1.343 3.5 3 3.5z" />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 20h14M5 20v-1a4 4 0 014-4h6a4 4 0 014 4v1" />
+        </svg>
+        <span class="text-xl font-semibold">Sou Paciente</span>
+      </a>
+    </div>
   </div>
-
 </body>
 
 </html>

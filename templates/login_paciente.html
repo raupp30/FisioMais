@@ -21,10 +21,10 @@
     <h2 class="text-3xl font-bold text-center mb-6">👤 Login do Paciente</h2>
 
     {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        <div class="space-y-3 mb-6">
-          {% for category, message in messages %}
-            <div class="p-5 rounded-lg border text-sm text-center font-medium
+    {% if messages %}
+    <div class="space-y-3 mb-6">
+      {% for category, message in messages %}
+      <div class="p-5 rounded-lg border text-sm text-center font-medium
                         {% if category == 'success' %}
                           bg-gray-300 border-gray-500 text-black
                         {% elif category == 'error' %}
@@ -32,11 +32,11 @@
                         {% else %}
                           bg-gray-300 border-gray-500 text-black
                         {% endif %}">
-              🔔 {{ message }}
-            </div>
-          {% endfor %}
-        </div>
-      {% endif %}
+        🔔 {{ message }}
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
     {% endwith %}
 
     <label for="email" class="block text-sm font-medium mb-1">E-mail</label>
@@ -63,4 +63,5 @@
   </form>
 
 </body>
+
 </html>
