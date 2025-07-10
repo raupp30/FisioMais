@@ -48,7 +48,7 @@
     <!-- Flash messages -->
     {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
-    <div class="p-4 rounded-lg font-semibold border border-teal-500 bg-teal-300 text-white text-center space-y-1">
+    <div class="p-4 rounded-lg font-semibold border border-gray-500 bg-gray-300 text-black text-center space-y-1">
       {% for category, message in messages %}
       <p>🔔 {{ message }}</p>
       {% endfor %}
